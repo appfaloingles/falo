@@ -1,0 +1,826 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Falo · Aprenda Inglês</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700;800&display=swap">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#FF5630" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#161016" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Falo">
+<style>
+  :root{
+    --ground:#FAF5F1; --surface:#FFFFFF; --surface-2:#F4ECE6;
+    --ink:#241722; --ink-soft:#8A7A75; --line:#ECE0D9;
+    --brand:#FF5630; --brand-deep:#E8431F; --brand-soft:#FFEBE4;
+    --teal:#0FB39B; --teal-soft:#DBF4EF; --teal-ink:#0A7E6E;
+    --gold:#F5A623; --gold-soft:#FCEED2; --gold-ink:#B4740A;
+    --shadow:0 18px 40px -22px rgba(60,26,20,.45);
+    --shadow-sm:0 6px 18px -12px rgba(60,26,20,.5);
+  }
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+    --ground:#161016; --surface:#221826; --surface-2:#2B1F30;
+    --ink:#F6EBE9; --ink-soft:#B0A0A0; --line:#352640;
+    --brand:#FF6A47; --brand-deep:#FF5630; --brand-soft:#3A201C;
+    --teal:#25C9B2; --teal-soft:#123A38; --teal-ink:#7FE9D9;
+    --gold:#FFC152; --gold-soft:#3A2C16; --gold-ink:#FFD489;
+    --shadow:0 22px 46px -20px rgba(0,0,0,.7); --shadow-sm:0 8px 20px -12px rgba(0,0,0,.65);
+  }}
+  :root[data-theme="dark"]{
+    --ground:#161016; --surface:#221826; --surface-2:#2B1F30;
+    --ink:#F6EBE9; --ink-soft:#B0A0A0; --line:#352640;
+    --brand:#FF6A47; --brand-deep:#FF5630; --brand-soft:#3A201C;
+    --teal:#25C9B2; --teal-soft:#123A38; --teal-ink:#7FE9D9;
+    --gold:#FFC152; --gold-soft:#3A2C16; --gold-ink:#FFD489;
+    --shadow:0 22px 46px -20px rgba(0,0,0,.7); --shadow-sm:0 8px 20px -12px rgba(0,0,0,.65);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{font-family:"Figtree",system-ui,sans-serif; color:var(--ink);
+    background:radial-gradient(1200px 600px at 50% -10%, color-mix(in srgb,var(--brand) 12%, transparent), transparent 60%),var(--ground);
+    min-height:100vh; -webkit-font-smoothing:antialiased; display:flex; justify-content:center}
+  .display{font-family:"Bricolage Grotesque",system-ui,sans-serif; font-weight:800; letter-spacing:-.02em; margin:0; line-height:1.05}
+  .num{font-variant-numeric:tabular-nums}
+
+  .device{width:100%; max-width:440px; min-height:100vh; position:relative; background:var(--ground); display:flex; flex-direction:column; padding:0 0 92px}
+  @media (min-width:520px){
+    body{align-items:center; padding:28px 0}
+    .device{min-height:auto; height:min(880px,92vh); border-radius:40px; overflow-y:auto; overflow-x:hidden; scrollbar-width:none;
+      box-shadow:var(--shadow), 0 0 0 10px color-mix(in srgb,var(--ink) 90%, #000), 0 0 0 12px color-mix(in srgb,var(--ink) 70%,#000)}
+    .device::-webkit-scrollbar{display:none}
+  }
+
+  .top{position:sticky; top:0; z-index:30; padding:16px 18px 12px; background:color-mix(in srgb,var(--ground) 82%, transparent); backdrop-filter:blur(14px); display:flex; align-items:center; gap:10px; border-bottom:1px solid color-mix(in srgb,var(--line) 60%,transparent)}
+  .icon{width:34px;height:34px;border-radius:11px;background:var(--brand);display:grid;place-items:center;box-shadow:0 6px 14px -6px var(--brand);flex:none}
+  .icon svg{width:19px;height:19px;display:block}
+  .word{font-family:"Bricolage Grotesque";font-weight:800;font-size:23px;letter-spacing:-.03em;color:var(--ink)}
+  .word b{color:var(--brand)}
+  .chips{margin-left:auto;display:flex;gap:7px}
+  .chip{display:inline-flex;align-items:center;gap:5px;font-weight:800;font-size:13px;padding:6px 10px;border-radius:999px;box-shadow:var(--shadow-sm)}
+  .chip.fire{color:var(--brand);background:var(--brand-soft)} .chip.xp{color:var(--gold-ink);background:var(--gold-soft)}
+  .themeBtn{border:none;cursor:pointer;width:34px;height:34px;border-radius:10px;background:var(--surface);box-shadow:var(--shadow-sm);font-size:15px;flex:none}
+
+  .scroll{padding:18px 18px 0;display:flex;flex-direction:column;gap:16px}
+
+  .hi{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
+  .hi h1{font-size:25px} .hi p{margin:2px 0 0;color:var(--ink-soft);font-weight:600;font-size:14px}
+  .ring{width:60px;height:60px;flex:none;position:relative}
+  .ring svg{transform:rotate(-90deg)}
+  .ring .lab{position:absolute;inset:0;display:grid;place-items:center;font-weight:800;font-size:12.5px;line-height:1;text-align:center}
+  .ring .lab small{display:block;font-size:8.5px;color:var(--ink-soft);font-weight:700;letter-spacing:.04em;margin-top:1px}
+
+  .cont{position:relative;overflow:hidden;border-radius:24px;padding:20px;color:#fff;background:linear-gradient(135deg,var(--brand),#FF7B4D);box-shadow:0 20px 38px -20px var(--brand);cursor:pointer;text-decoration:none;display:block}
+  .cont::after{content:"";position:absolute;right:-30px;bottom:-50px;width:170px;height:170px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.22),transparent 68%)}
+  .cont .eyebrow{font-weight:800;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;opacity:.9}
+  .cont h2{font-size:22px;margin:6px 0 3px} .cont .sub{opacity:.92;font-weight:600;font-size:13.5px}
+  .cont .barwrap{height:8px;border-radius:999px;background:rgba(255,255,255,.28);margin:14px 0 0;overflow:hidden}
+  .cont .barwrap>i{display:block;height:100%;background:#fff;border-radius:999px;transition:width .5s}
+  .play{margin-top:16px;display:inline-flex;align-items:center;gap:9px;background:#fff;color:var(--brand-deep);font-family:"Bricolage Grotesque";font-weight:800;font-size:15px;border:none;cursor:pointer;padding:12px 20px;border-radius:14px;box-shadow:0 10px 20px -10px rgba(0,0,0,.35)}
+
+  .level{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:16px 18px;box-shadow:var(--shadow-sm)}
+  .level .row{display:flex;align-items:center;gap:12px}
+  .level .badge{width:44px;height:44px;border-radius:13px;flex:none;display:grid;place-items:center;font-family:"Bricolage Grotesque";font-weight:800;font-size:19px;color:#fff;background:linear-gradient(135deg,var(--teal),#12C9A6)}
+  .level .t b{font-family:"Bricolage Grotesque";font-size:16px} .level .t span{display:block;color:var(--ink-soft);font-weight:600;font-size:12.5px}
+  .level .pct{margin-left:auto;font-weight:800;color:var(--teal-ink);font-size:14px}
+  .level .barwrap{height:8px;border-radius:999px;background:var(--surface-2);margin-top:12px;overflow:hidden}
+  .level .barwrap>i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--teal),var(--gold));transition:width .5s}
+
+  .tabs{display:flex;gap:6px;background:var(--surface);padding:6px;border-radius:16px;box-shadow:var(--shadow-sm);position:sticky;top:64px;z-index:20;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{flex:0 0 auto;border:none;cursor:pointer;padding:10px 15px;border-radius:11px;font-family:"Bricolage Grotesque";font-weight:700;font-size:13.5px;color:var(--ink-soft);background:transparent;white-space:nowrap}
+  .tab.on{color:#fff;background:var(--brand);box-shadow:var(--shadow-sm)}
+
+  .sect{font-family:"Figtree";font-weight:800;font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);margin:2px 2px -6px}
+  .list{display:flex;flex-direction:column;gap:10px}
+  .lrow{display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:12px;box-shadow:var(--shadow-sm);border:1px solid var(--line);transition:transform .1s}
+  .lrow:active{transform:scale(.99)}
+  .lrow.done{border-color:color-mix(in srgb,var(--teal) 45%,transparent)}
+  .open{display:flex;align-items:center;gap:12px;flex:1;min-width:0;cursor:pointer;text-decoration:none;color:inherit}
+  .n{width:34px;height:34px;flex:none;border-radius:11px;display:grid;place-items:center;font-family:"Bricolage Grotesque";font-weight:800;font-size:15px;color:var(--brand);background:var(--brand-soft)}
+  .lrow.done .n{color:#fff;background:linear-gradient(135deg,var(--teal),#12C9A6)}
+  .emoji{font-size:22px;flex:none;width:26px;text-align:center}
+  .ltext{min-width:0}
+  .ltext b{display:block;font-family:"Bricolage Grotesque";font-size:15px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .ltext small{display:block;color:var(--ink-soft);font-weight:600;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .go{flex:none;color:var(--ink-soft);font-size:20px;opacity:.55}
+  .check{flex:none;width:30px;height:30px;border-radius:50%;cursor:pointer;border:2px solid var(--line);background:var(--surface);font-size:15px;color:var(--teal);display:grid;place-items:center;padding:0}
+  .lrow.done .check{border-color:var(--teal);background:var(--teal);color:#fff}
+  .lab .n{background:var(--teal-soft);color:var(--teal-ink)}
+  .hide{display:none}
+
+  .prem{position:relative;overflow:hidden;border-radius:22px;padding:20px;color:#fff;background:linear-gradient(135deg,#241722,#3C2233 60%,var(--brand-deep));box-shadow:var(--shadow)}
+  .prem .k{font-weight:800;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+  .prem h3{font-family:"Bricolage Grotesque";font-weight:800;font-size:19px;margin:7px 0 4px;text-wrap:balance}
+  .prem p{margin:0;font-size:13px;opacity:.86}
+  .prem .cta{margin-top:15px;display:flex;align-items:center;gap:12px}
+  .prem .btn{background:var(--gold);color:#2A1A06;font-family:"Bricolage Grotesque";font-weight:800;font-size:15px;border:none;cursor:pointer;padding:12px 20px;border-radius:14px;box-shadow:0 12px 22px -10px var(--gold)}
+  .prem .price b{font-family:"Bricolage Grotesque";font-size:17px} .prem .price span{display:block;font-size:11px;opacity:.75}
+
+  .foot{text-align:center;color:var(--ink-soft);font-size:11px;font-weight:600;padding:16px 10px 6px;opacity:.8}
+  .foot a{color:var(--brand);cursor:pointer;text-decoration:none}
+
+  .nav{position:fixed;bottom:0;left:0;right:0;z-index:40;margin:0 auto;max-width:440px;background:color-mix(in srgb,var(--surface) 90%, transparent);backdrop-filter:blur(16px);border-top:1px solid var(--line);display:flex;padding:9px 8px calc(9px + env(safe-area-inset-bottom))}
+  @media (min-width:520px){.nav{position:sticky;border-radius:0 0 40px 40px;margin-top:auto}}
+  .navb{flex:1;background:none;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--ink-soft);font-weight:700;font-size:10.5px;padding:4px}
+  .navb svg{width:23px;height:23px} .navb.on{color:var(--brand)}
+  .navb.mic{position:relative;top:-2px}
+  .navb.mic .mc{width:46px;height:46px;border-radius:16px;background:var(--brand);color:#fff;display:grid;place-items:center;box-shadow:0 10px 20px -8px var(--brand);margin-bottom:2px}
+  .navb.mic .mc svg{width:24px;height:24px}
+
+  @keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+  .scroll>*{animation:rise .45s cubic-bezier(.2,.7,.2,1) both}
+  .scroll>*:nth-child(2){animation-delay:.04s}.scroll>*:nth-child(3){animation-delay:.08s}.scroll>*:nth-child(4){animation-delay:.12s}.scroll>*:nth-child(5){animation-delay:.16s}
+  .ringfill{transition:stroke-dashoffset 1s cubic-bezier(.3,.8,.3,1)}
+  @media (prefers-reduced-motion:reduce){.scroll>*{animation:none}.ringfill{transition:none}.cont .barwrap>i,.level .barwrap>i{transition:none}}
+</style>
+</head>
+<body>
+<div class="device">
+  <header class="top">
+    <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M5 4h14a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H10l-4 4v-4H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z" fill="#fff"/><circle cx="9" cy="10" r="1.3" fill="#FF5630"/><circle cx="12.5" cy="10" r="1.3" fill="#FF5630"/><circle cx="16" cy="10" r="1.3" fill="#FF5630"/></svg></span>
+    <span class="word">fal<b>o</b></span>
+    <div class="chips">
+      <span class="chip fire" id="fire">🔥 <span class="num">0</span></span>
+      <span class="chip xp" id="xp">⭐ <span class="num">0</span></span>
+    </div>
+    <button class="themeBtn" id="theme" title="Tema" aria-label="Alternar tema">🌙</button>
+  </header>
+
+  <div class="scroll">
+    <div class="hi">
+      <div>
+        <h1 class="display" id="greet">Bora falar inglês? 👋</h1>
+        <p id="greetsub">Continue de onde parou.</p>
+      </div>
+      <div class="ring" title="Meta diária">
+        <svg width="60" height="60" viewBox="0 0 60 60">
+          <circle cx="30" cy="30" r="25" fill="none" stroke="var(--surface-2)" stroke-width="7"/>
+          <circle id="rc" class="ringfill" cx="30" cy="30" r="25" fill="none" stroke="var(--brand)" stroke-width="7" stroke-linecap="round" stroke-dasharray="157" stroke-dashoffset="157"/>
+        </svg>
+        <div class="lab"><span class="num" id="dayn">0/3</span><small>META</small></div>
+      </div>
+    </div>
+
+    <a class="cont" id="continue" href="#">
+      <div class="eyebrow" id="contEye">Comece agora</div>
+      <h2 class="display" id="contTitle">Alfabeto e saudações</h2>
+      <div class="sub" id="contSub">Módulo 1 · Aula 1</div>
+      <div class="barwrap"><i id="contBar"></i></div>
+      <span class="play"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg> Continuar</span>
+    </a>
+
+    <div class="level">
+      <div class="row">
+        <span class="badge" id="lvBadge">1</span>
+        <div class="t"><b id="lvTitle">Nível 1</b><span id="lvSub">Comece a somar XP!</span></div>
+        <span class="pct num" id="lvPct">0%</span>
+      </div>
+      <div class="barwrap"><i id="lvBar"></i></div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab on" data-t="m1">M1</button>
+      <button class="tab" data-t="m2">M2</button>
+      <button class="tab" data-t="m3">M3</button>
+      <button class="tab" data-t="m4">M4</button>
+      <button class="tab" data-t="m5">M5</button>
+      <button class="tab" data-t="m6">M6</button>
+      <button class="tab" data-t="m7">M7</button>
+      <button class="tab" data-t="m8">M8</button>
+      <button class="tab" data-t="m9">M9</button>
+      <button class="tab" data-t="m10">M10</button>
+      <button class="tab" data-t="m11">M11</button>
+      <button class="tab" data-t="m12">M12</button>
+      <button class="tab" data-t="m13">M13</button>
+      <button class="tab" data-t="m14">M14</button>
+      <button class="tab" data-t="m15">M15</button>
+      <button class="tab" data-t="m16">M16</button>
+      <button class="tab" data-t="m17">M17</button>
+      <button class="tab" data-t="m18">M18</button>
+      <button class="tab" data-t="m19">M19</button>
+      <button class="tab" data-t="m20">M20</button>
+      <button class="tab" data-t="conversas">Conversas 🎧</button>
+      <button class="tab" data-t="labs">Labs</button>
+    </div>
+
+    <div id="pane_m1"><div class="sect">Módulo 1 · Fundamentos</div><div class="list" id="list_m1"></div></div>
+    <div id="pane_m2" class="hide"><div class="sect">Módulo 2 · Dia a dia</div><div class="list" id="list_m2"></div></div>
+    <div id="pane_m3" class="hide"><div class="sect">Módulo 3 · Intermediário (B1)</div><div class="list" id="list_m3"></div></div>
+    <div id="pane_m4" class="hide"><div class="sect">Módulo 4 · Avançado (B2)</div><div class="list" id="list_m4"></div></div>
+    <div id="pane_m5" class="hide"><div class="sect">Módulo 5 · Proficiente (C1)</div><div class="list" id="list_m5"></div></div>
+    <div id="pane_m6" class="hide"><div class="sect">Módulo 6 · Expressões (Idioms)</div><div class="list" id="list_m6"></div></div>
+    <div id="pane_m7" class="hide"><div class="sect">Módulo 7 · Phrasal Verbs</div><div class="list" id="list_m7"></div></div>
+    <div id="pane_m8" class="hide"><div class="sect">Módulo 8 · Negócios</div><div class="list" id="list_m8"></div></div>
+    <div id="pane_m9" class="hide"><div class="sect">Módulo 9 · Viagem & Vida Real</div><div class="list" id="list_m9"></div></div>
+    <div id="pane_m10" class="hide"><div class="sect">Módulo 10 · Fluência & Conversação</div><div class="list" id="list_m10"></div></div>
+    <div id="pane_m11" class="hide"><div class="sect">Módulo 11 · Preposições</div><div class="list" id="list_m11"></div></div>
+    <div id="pane_m12" class="hide"><div class="sect">Módulo 12 · Artigos & Determinantes</div><div class="list" id="list_m12"></div></div>
+    <div id="pane_m13" class="hide"><div class="sect">Módulo 13 · Palavras que Confundem</div><div class="list" id="list_m13"></div></div>
+    <div id="pane_m14" class="hide"><div class="sect">Módulo 14 · Americano x Britânico</div><div class="list" id="list_m14"></div></div>
+    <div id="pane_m15" class="hide"><div class="sect">Módulo 15 · Internet & Textão</div><div class="list" id="list_m15"></div></div>
+    <div id="pane_m16" class="hide"><div class="sect">Módulo 16 · Escrita</div><div class="list" id="list_m16"></div></div>
+    <div id="pane_m17" class="hide"><div class="sect">Módulo 17 · Números, Datas & Dinheiro</div><div class="list" id="list_m17"></div></div>
+    <div id="pane_m18" class="hide"><div class="sect">Módulo 18 · Descrever Tudo</div><div class="list" id="list_m18"></div></div>
+    <div id="pane_m19" class="hide"><div class="sect">Módulo 19 · Saúde & Bem-estar</div><div class="list" id="list_m19"></div></div>
+    <div id="pane_m20" class="hide"><div class="sect">Módulo 20 · Cultura Pop & Conversa Real 🎓</div><div class="list" id="list_m20"></div></div>
+    <div id="pane_conversas" class="hide"><div class="sect">Conversas · Treino de escuta 🎧</div><div class="list" id="list_conversas"></div></div>
+    <div id="pane_labs" class="hide"><div class="sect">Extras & Pronúncia</div><div class="list lab" id="list_labs"></div></div>
+
+    <div class="prem">
+      <div class="k">Falo Premium</div>
+      <h3>Destrave todos os módulos e vire fluente</h3>
+      <p>Voz nativa em todas as aulas, sem limites. 7 dias grátis.</p>
+      <div class="cta">
+        <button class="btn" id="premBtn">Começar grátis</button>
+        <div class="price"><b>R$ 19,90</b><span>por mês</span></div>
+      </div>
+    </div>
+
+    <div class="foot">Falo · seu app de inglês · <a id="reset">zerar progresso</a></div>
+  </div>
+
+  <nav class="nav">
+    <button class="navb on" id="navHome"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20h14V9.5"/></svg>Início</button>
+    <button class="navb" id="navTrail"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v13a4 4 0 0 0 8 0V8a3 3 0 0 1 6 0v5"/><circle cx="6" cy="19" r="2"/></svg>Trilha</button>
+    <button class="navb mic" id="navPractice"><span class="mc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3"/></svg></span>Praticar</button>
+    <button class="navb" id="navProfile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"/><path d="M4 21c0-4 3.5-6 8-6s8 2 8 6"/></svg>Perfil</button>
+  </nav>
+</div>
+
+<script>
+const M1=[
+ [1,"modulo1_aula1.html","🔤","Alfabeto e saudações","The alphabet & greetings"],
+ [2,"modulo1_aula2.html","🔢","Números","Numbers"],
+ [3,"modulo1_aula3.html","🧮","Formando números","Building numbers"],
+ [4,"modulo1_aula4.html","🎨","Cores e primeiras perguntas","Colors & first questions"],
+ [5,"modulo1_aula5.html","👨‍👩‍👧","Família","Family"],
+ [6,"modulo1_aula6.html","🍔","Comidas e bebidas","Food & drinks"],
+ [7,"modulo1_aula7.html","🧩","Verbo to be","The verb to be"],
+ [8,"modulo1_aula8.html","👉","This, that, these, those","Demonstratives"],
+ [9,"modulo1_aula9.html","📅","Dias e meses","Days & months"],
+ [10,"modulo1_aula10.html","🕐","Que horas são","Telling the time"],
+ [11,"modulo1_aula11.html","✨","Adjetivos","Adjectives"],
+ [12,"modulo1_aula12.html","🧍","O corpo","The body"],
+ [13,"modulo1_aula13.html","👕","Roupas","Clothes"],
+ [14,"modulo1_aula14.html","🏙️","Lugares da cidade","Places in town"],
+ [15,"modulo1_aula15.html","🏃","Verbos de ação","Action verbs"],
+ [16,"modulo1_aula16.html","☀️","Rotina diária","Daily routine"],
+ [17,"modulo1_aula17.html","🌦️","O tempo / clima","The weather"],
+ [18,"modulo1_aula18.html","🐶","Animais","Animals"],
+ [19,"modulo1_aula19.html","❓","Palavras de pergunta","Question words"],
+ [20,"modulo1_aula20.html","🏅","Revisão do Módulo 1","Module 1 review"],
+];
+const M2=[
+ [1,"modulo2_aula1.html","🧺","Some, any, a, an","Quantifiers"],
+ [2,"modulo2_aula2.html","💪","Can e can't","Can & can't"],
+ [3,"modulo2_aula3.html","⏳","Presente contínuo","Present continuous"],
+ [4,"modulo2_aula4.html","🛍️","Compras e dinheiro","Shopping & money"],
+ [5,"modulo2_aula5.html","🧭","Direções","Directions"],
+ [6,"modulo2_aula6.html","🚌","Transporte","Transport"],
+ [7,"modulo2_aula7.html","🍽️","No restaurante","At the restaurant"],
+ [8,"modulo2_aula8.html","🩺","Saúde","Health"],
+ [9,"modulo2_aula9.html","💼","Profissões","Jobs"],
+ [10,"modulo2_aula10.html","⏪","Was e were","Was & were"],
+ [11,"modulo2_aula11.html","⏮️","Passado (regular)","The past tense"],
+ [12,"modulo2_aula12.html","🔀","Passado irregular","Irregular past verbs"],
+ [13,"modulo2_aula13.html","🎯","Futuro: going to","Going to (future)"],
+ [14,"modulo2_aula14.html","⚖️","Comparativos","Comparatives"],
+ [15,"modulo2_aula15.html","🥇","Superlativos","Superlatives"],
+ [16,"modulo2_aula16.html","📍","Preposições de lugar","Prepositions of place"],
+ [17,"modulo2_aula17.html","🧑","Descrever pessoas","Describing people"],
+ [18,"modulo2_aula18.html","🏠","Casa e móveis","House & furniture"],
+ [19,"modulo2_aula19.html","✈️","Viagem e hotel","Travel & hotel"],
+ [20,"modulo2_aula20.html","🏆","Revisão do Módulo 2","Module 2 review"],
+];
+const M3=[
+ [1,"modulo3_aula1.html","🌍","Present Perfect","Experiências: I've done it"],
+ [2,"modulo3_aula2.html","⏱️","Perfect x Passado","Present perfect vs past"],
+ [3,"modulo3_aula3.html","🎬","Passado contínuo","Past continuous"],
+ [4,"modulo3_aula4.html","🔮","Will x Going to","Falar do futuro"],
+ [5,"modulo3_aula5.html","🛒","Contável/Incontável","much, many, some, any"],
+ [6,"modulo3_aula6.html","🏃","Advérbios de modo","Adverbs of manner"],
+ [7,"modulo3_aula7.html","💡","Should","Dar conselhos"],
+ [8,"modulo3_aula8.html","✅","Must / Have to","Obrigação e proibição"],
+ [9,"modulo3_aula9.html","🌦️","1º Condicional","If..., will..."],
+ [10,"modulo3_aula10.html","🤝","Pronomes","objeto & possessivos"],
+ [11,"modulo3_aula11.html","🔗","Relative clauses","who / which / that"],
+ [12,"modulo3_aula12.html","📼","Used to","Hábitos do passado"],
+ [13,"modulo3_aula13.html","🎯","Gerúndio x Infinitivo","-ing or to"],
+ [14,"modulo3_aula14.html","🔀","Phrasal verbs","get up, turn on..."],
+ [15,"modulo3_aula15.html","🧵","Conectivos","because, so, but"],
+ [16,"modulo3_aula16.html","😊","Sentimentos","-ed vs -ing"],
+ [17,"modulo3_aula17.html","💻","Tecnologia","Internet & apps"],
+ [18,"modulo3_aula18.html","📧","Trabalho","Office & e-mails"],
+ [19,"modulo3_aula19.html","📅","Planos & convites","Making plans"],
+ [20,"modulo3_aula20.html","🎓","Revisão do Módulo 3","Module 3 review"],
+];
+const M4=[
+ [1,"modulo4_aula1.html","⏳","Present Perfect Cont.","have been -ing"],
+ [2,"modulo4_aula2.html","🏭","Voz passiva","Passive voice"],
+ [3,"modulo4_aula3.html","💬","Discurso indireto","Reported speech"],
+ [4,"modulo4_aula4.html","🗣️","Perguntas indiretas","Reported questions"],
+ [5,"modulo4_aula5.html","🌈","2º Condicional","Second conditional"],
+ [6,"modulo4_aula6.html","⏮️","3º Condicional","Third conditional"],
+ [7,"modulo4_aula7.html","🕵️","Modais de dedução","must be / might be"],
+ [8,"modulo4_aula8.html","🔙","Modais no passado","should have..."],
+ [9,"modulo4_aula9.html","🔗","Relative clauses +","defining / non-defining"],
+ [10,"modulo4_aula10.html","🌠","Wish / If only","Desejos e arrependimentos"],
+ [11,"modulo4_aula11.html","🔮","Futuros avançados","will be / will have done"],
+ [12,"modulo4_aula12.html","🔄","Used to / be used to","Hábitos e adaptação"],
+ [13,"modulo4_aula13.html","🔧","Causativo","have it done"],
+ [14,"modulo4_aula14.html","🎭","Verb patterns","remember to / doing"],
+ [15,"modulo4_aula15.html","🧷","Conectivos formais","however, despite"],
+ [16,"modulo4_aula16.html","🧩","Phrasal verbs +","put up with..."],
+ [17,"modulo4_aula17.html","📈","Trabalho & carreira","Business & careers"],
+ [18,"modulo4_aula18.html","📰","Notícias","News & current events"],
+ [19,"modulo4_aula19.html","🌱","Meio ambiente","Environment & society"],
+ [20,"modulo4_aula20.html","🎓","Revisão do Módulo 4","Module 4 review"],
+];
+const M5=[
+ [1,"modulo5_aula1.html","🔀","Condicionais mistos","Mixed conditionals"],
+ [2,"modulo5_aula2.html","🔃","Inversão","Inversion for emphasis"],
+ [3,"modulo5_aula3.html","✨","Cleft sentences","It was… that…"],
+ [4,"modulo5_aula4.html","🗞️","Passiva de relato","It is said that…"],
+ [5,"modulo5_aula5.html","🚶","Orações reduzidas","Participle clauses"],
+ [6,"modulo5_aula6.html","😬","Modais de arrependimento","needn't have…"],
+ [7,"modulo5_aula7.html","🎩","Subjuntivo","The subjunctive"],
+ [8,"modulo5_aula8.html","✂️","Elipse & substituição","so do I / one"],
+ [9,"modulo5_aula9.html","🧠","Orações substantivas","the fact that…"],
+ [10,"modulo5_aula10.html","❗","Ênfase","Emphasis & fronting"],
+ [11,"modulo5_aula11.html","🧲","Collocations","make / do / take"],
+ [12,"modulo5_aula12.html","🗯️","Idioms","Common idioms"],
+ [13,"modulo5_aula13.html","🧬","Formação de palavras","Word formation"],
+ [14,"modulo5_aula14.html","🧩","Phrasal verbs C1","Advanced phrasal verbs"],
+ [15,"modulo5_aula15.html","📝","Inglês formal","Formal & academic"],
+ [16,"modulo5_aula16.html","📊","Gráficos & dados","Describing trends"],
+ [17,"modulo5_aula17.html","⚖️","Opinião & debate","Opinions & debating"],
+ [18,"modulo5_aula18.html","🎭","Personalidade","Personality & emotions"],
+ [19,"modulo5_aula19.html","🔬","Ciência & tecnologia","Science & technology"],
+ [20,"modulo5_aula20.html","🎓","Revisão do Módulo 5","Module 5 review"],
+];
+const M6=[
+ [1,"modulo6_aula1.html","😄","Idioms: Emoções","Feelings"],
+ [2,"modulo6_aula2.html","💰","Idioms: Dinheiro","Money"],
+ [3,"modulo6_aula3.html","⏰","Idioms: Tempo","Time"],
+ [4,"modulo6_aula4.html","📈","Idioms: Trabalho","Work & success"],
+ [5,"modulo6_aula5.html","🤝","Idioms: Relacionamentos","Relationships"],
+ [6,"modulo6_aula6.html","🖐️","Idioms: Corpo","Body parts"],
+ [7,"modulo6_aula7.html","🍽️","Idioms: Comida","Food"],
+ [8,"modulo6_aula8.html","🐾","Idioms: Animais","Animals"],
+ [9,"modulo6_aula9.html","🌦️","Idioms: Clima","Weather & nature"],
+ [10,"modulo6_aula10.html","💬","Idioms: Comunicação","Communication"],
+ [11,"modulo6_aula11.html","💪","Idioms: Esforço","Effort & difficulty"],
+ [12,"modulo6_aula12.html","❤️‍🩹","Idioms: Saúde","Health & life"],
+ [13,"modulo6_aula13.html","✈️","Idioms: Viagem","Travel"],
+ [14,"modulo6_aula14.html","🍀","Idioms: Sorte","Luck & chance"],
+ [15,"modulo6_aula15.html","😠","Idioms: Raiva","Anger & conflict"],
+ [16,"modulo6_aula16.html","🧠","Idioms: Entendimento","Understanding"],
+ [17,"modulo6_aula17.html","🏅","Idioms: Esporte","Sports"],
+ [18,"modulo6_aula18.html","🎨","Idioms: Cores & números","Colors & numbers"],
+ [19,"modulo6_aula19.html","📜","Ditados & provérbios","Sayings & proverbs"],
+ [20,"modulo6_aula20.html","🎓","Revisão do Módulo 6","Module 6 review"],
+];
+const M7=[
+ [1,"modulo7_aula1.html","⬆️","Phrasal: UP","get up, give up"],
+ [2,"modulo7_aula2.html","⬇️","Phrasal: DOWN","calm down, break down"],
+ [3,"modulo7_aula3.html","📤","Phrasal: OUT","find out, work out"],
+ [4,"modulo7_aula4.html","▶️","Phrasal: ON","go on, carry on"],
+ [5,"modulo7_aula5.html","🔌","Phrasal: OFF","take off, turn off"],
+ [6,"modulo7_aula6.html","📥","Phrasal: IN","fill in, check in"],
+ [7,"modulo7_aula7.html","🔙","Phrasal: BACK","call back, pay back"],
+ [8,"modulo7_aula8.html","🗑️","Phrasal: AWAY","throw away, get away"],
+ [9,"modulo7_aula9.html","🔄","Phrasal: OVER","take over, get over"],
+ [10,"modulo7_aula10.html","✂️","Separáveis x Insep.","turn it off"],
+ [11,"modulo7_aula11.html","💼","Phrasal: Trabalho","carry out, take on"],
+ [12,"modulo7_aula12.html","☀️","Phrasal: Rotina","wake up, work out"],
+ [13,"modulo7_aula13.html","❤️","Phrasal: Relações","get along, break up"],
+ [14,"modulo7_aula14.html","✈️","Phrasal: Viagem","set off, check in"],
+ [15,"modulo7_aula15.html","💰","Phrasal: Dinheiro","save up, pay off"],
+ [16,"modulo7_aula16.html","🩺","Phrasal: Saúde","get over, throw up"],
+ [17,"modulo7_aula17.html","💻","Phrasal: Tech","log in, back up"],
+ [18,"modulo7_aula18.html","💬","Phrasal: Comunicação","bring up, point out"],
+ [19,"modulo7_aula19.html","🧩","Phrasal: 3 palavras","put up with…"],
+ [20,"modulo7_aula20.html","🎓","Revisão do Módulo 7","Module 7 review"],
+];
+const M8=[
+ [1,"modulo8_aula1.html","👥","Reuniões","Meetings"],
+ [2,"modulo8_aula2.html","📧","E-mails","Business emails"],
+ [3,"modulo8_aula3.html","📞","Ligações & calls","Phone & video calls"],
+ [4,"modulo8_aula4.html","🤝","Negociação","Negotiating"],
+ [5,"modulo8_aula5.html","📊","Apresentações","Presentations"],
+ [6,"modulo8_aula6.html","🧑‍💼","Entrevista de emprego","Job interviews"],
+ [7,"modulo8_aula7.html","📄","Currículo","Job applications"],
+ [8,"modulo8_aula8.html","🌐","Networking","Networking"],
+ [9,"modulo8_aula9.html","💵","Finanças","Finance"],
+ [10,"modulo8_aula10.html","📣","Marketing & vendas","Marketing & sales"],
+ [11,"modulo8_aula11.html","🧭","Gestão & liderança","Management"],
+ [12,"modulo8_aula12.html","📅","Projetos & prazos","Projects"],
+ [13,"modulo8_aula13.html","✍️","Contratos","Contracts"],
+ [14,"modulo8_aula14.html","🎧","Atendimento","Customer service"],
+ [15,"modulo8_aula15.html","👔","RH & recrutamento","HR & recruitment"],
+ [16,"modulo8_aula16.html","🚀","Startups","Startups"],
+ [17,"modulo8_aula17.html","🏢","Vida de escritório","Office life"],
+ [18,"modulo8_aula18.html","📈","Dados & relatórios","Data & reports"],
+ [19,"modulo8_aula19.html","💬","Jargão corporativo","Business jargon"],
+ [20,"modulo8_aula20.html","🎓","Revisão do Módulo 8","Module 8 review"],
+];
+const M9=[
+ [1,"modulo9_aula1.html","✈️","Aeroporto","Airport"],
+ [2,"modulo9_aula2.html","🏨","Hotel","Hotels"],
+ [3,"modulo9_aula3.html","🍽️","Restaurante","Restaurants"],
+ [4,"modulo9_aula4.html","🧭","Direções & transporte","Directions"],
+ [5,"modulo9_aula5.html","🛍️","Compras & pechincha","Shopping"],
+ [6,"modulo9_aula6.html","🚑","Saúde & emergências","Emergencies"],
+ [7,"modulo9_aula7.html","📸","Pontos turísticos","Sightseeing"],
+ [8,"modulo9_aula8.html","🔑","Aluguel & reservas","Booking & renting"],
+ [9,"modulo9_aula9.html","💱","Dinheiro no exterior","Money abroad"],
+ [10,"modulo9_aula10.html","💬","Small talk","Small talk"],
+ [11,"modulo9_aula11.html","💘","Paquera & social","Dating"],
+ [12,"modulo9_aula12.html","📶","Celular & internet","Phone & internet"],
+ [13,"modulo9_aula13.html","😤","Problemas & reclamações","Complaints"],
+ [14,"modulo9_aula14.html","🌍","Cultura & etiqueta","Culture & etiquette"],
+ [15,"modulo9_aula15.html","🌦️","Clima","Weather"],
+ [16,"modulo9_aula16.html","🌃","Vida noturna","Nightlife"],
+ [17,"modulo9_aula17.html","🏞️","Natureza & aventura","Nature"],
+ [18,"modulo9_aula18.html","🍜","Comida local","Local food"],
+ [19,"modulo9_aula19.html","🆘","Segurança & ajuda","Safety & help"],
+ [20,"modulo9_aula20.html","🎓","Revisão do Módulo 9","Module 9 review"],
+];
+const M10=[
+ [1,"modulo10_aula1.html","🗣️","Muletas de fala","Fillers"],
+ [2,"modulo10_aula2.html","😮","Reagir & interesse","Reacting"],
+ [3,"modulo10_aula3.html","🤝","Concordar & discordar","Agree/disagree"],
+ [4,"modulo10_aula4.html","✋","Interromper","Interrupting"],
+ [5,"modulo10_aula5.html","🔗","Fala conectada","Connected speech"],
+ [6,"modulo10_aula6.html","💬","Small talk","Small talk"],
+ [7,"modulo10_aula7.html","📖","Contar histórias","Storytelling"],
+ [8,"modulo10_aula8.html","💭","Dar opinião","Opinions"],
+ [9,"modulo10_aula9.html","❓","Pedir pra repetir","Clarification"],
+ [10,"modulo10_aula10.html","😤","Emoções na fala","Emotions"],
+ [11,"modulo10_aula11.html","📅","Sugestões & planos","Suggestions"],
+ [12,"modulo10_aula12.html","👏","Elogiar & agradecer","Compliments"],
+ [13,"modulo10_aula13.html","🙇","Pedir desculpa","Apologizing"],
+ [14,"modulo10_aula14.html","📞","Ao telefone","Phone talk"],
+ [15,"modulo10_aula15.html","🕊️","Discordar com educação","Disagree politely"],
+ [16,"modulo10_aula16.html","😎","Gírias & casual","Slang"],
+ [17,"modulo10_aula17.html","🧵","Conectores de fala","Discourse markers"],
+ [18,"modulo10_aula18.html","⚖️","Debater & persuadir","Debating"],
+ [19,"modulo10_aula19.html","🎩","Soar educado","Being polite"],
+ [20,"modulo10_aula20.html","🎓","Graduação!","Graduation"],
+];
+const M11=[
+ [1,"modulo11_aula1.html","🕐","Preposições de tempo","in / on / at"],
+ [2,"modulo11_aula2.html","📍","Preposições de lugar","in / on / at"],
+ [3,"modulo11_aula3.html","🏃","Movimento","to, into, through"],
+ [4,"modulo11_aula4.html","🧭","Posição","above, under, between"],
+ [5,"modulo11_aula5.html","🔗","Verbos + prep (1)","depend on, listen to"],
+ [6,"modulo11_aula6.html","🧷","Verbos + prep (2)","agree with, apply for"],
+ [7,"modulo11_aula7.html","✨","Adjetivos + prep","good at, afraid of"],
+ [8,"modulo11_aula8.html","🚌","Transporte","by car, on foot"],
+ [9,"modulo11_aula9.html","🔄","Preposição + -ing","before doing"],
+ [10,"modulo11_aula10.html","⏳","for / since / during","tempo"],
+ [11,"modulo11_aula11.html","📅","by / until / from-to","limites de tempo"],
+ [12,"modulo11_aula12.html","↔️","between / among","beside, next to"],
+ [13,"modulo11_aula13.html","🧩","Frases prontas","on time, by the way"],
+ [14,"modulo11_aula14.html","🏠","at / in / on lugares","at home, in bed"],
+ [15,"modulo11_aula15.html","💬","Comunicação","talk to, listen to"],
+ [16,"modulo11_aula16.html","⚠️","Erros clássicos do BR","arrive at, married to"],
+ [17,"modulo11_aula17.html","🎯","Causa & razão","because of, due to"],
+ [18,"modulo11_aula18.html","🔧","Preposições compostas","according to"],
+ [19,"modulo11_aula19.html","🏋️","Praticando","mix geral"],
+ [20,"modulo11_aula20.html","🎓","Revisão do Módulo 11","Module 11 review"],
+];
+const LABS=[
+ [1,"extra_falsos.html","🪤","Falsos Cognatos","Armadilhas do brasileiro"],
+ [2,"modulo1_lab_th.html","👅","Som do TH","think · this"],
+ [3,"modulo1_lab_vogais.html","🐑","Vogais: ship x sheep","short /ɪ/ vs long /iː/"],
+ [4,"modulo1_lab_t_tr.html","🚆","T escondido","water · train · dream"],
+ [5,"lab_rh.html","🔤","R vs H","red não é 'hed'"],
+ [6,"lab_final.html","✂️","Consoantes finais","termine seco"],
+ [7,"lab_stress.html","🎵","Acento tônico","sílaba forte"],
+];
+const M12=[
+ [1,"modulo12_aula1.html","🅰️","a / an","Artigo indefinido"],
+ [2,"modulo12_aula2.html","📌","the","Artigo definido"],
+ [3,"modulo12_aula3.html","🚫","Artigo zero","sem artigo"],
+ [4,"modulo12_aula4.html","🔀","a/an x the","contraste"],
+ [5,"modulo12_aula5.html","🧺","some / any","some / any"],
+ [6,"modulo12_aula6.html","⚖️","much / many","a lot of"],
+ [7,"modulo12_aula7.html","🔬","few / little","poucos / pouco"],
+ [8,"modulo12_aula8.html","🔢","each / every / all","cada / todos"],
+ [9,"modulo12_aula9.html","✌️","both / either / neither","os dois / nenhum"],
+ [10,"modulo12_aula10.html","🔎","someone / anything","compostos"],
+ [11,"modulo12_aula11.html","❌","no / none","not any"],
+ [12,"modulo12_aula12.html","📊","most / more","a maioria / mais"],
+ [13,"modulo12_aula13.html","🥤","enough / too much","suficiente / demais"],
+ [14,"modulo12_aula14.html","🔑","Possessivos & 's","my, John's"],
+ [15,"modulo12_aula15.html","🔄","other / another","the others"],
+ [16,"modulo12_aula16.html","🌍","Artigos com lugares","the USA, Ø Brazil"],
+ [17,"modulo12_aula17.html","🚨","Erros clássicos do BR","the life is hard ❌"],
+ [18,"modulo12_aula18.html","🧮","Contável x incontável","quantificadores"],
+ [19,"modulo12_aula19.html","🏋️","Praticando","mix geral"],
+ [20,"modulo12_aula20.html","🎓","Revisão do Módulo 12","Module 12 review"],
+];
+const M13=[
+ [1,"modulo13_aula1.html","🔨","Make vs Do","os dois = 'fazer'"],
+ [2,"modulo13_aula2.html","🗣️","Say vs Tell","speak / talk"],
+ [3,"modulo13_aula3.html","🔁","Borrow vs Lend","emprestar"],
+ [4,"modulo13_aula4.html","📦","Bring vs Take","trazer / levar"],
+ [5,"modulo13_aula5.html","🚶","Come vs Go","vir / ir"],
+ [6,"modulo13_aula6.html","👀","See / Look / Watch","ver / olhar"],
+ [7,"modulo13_aula7.html","👂","Hear vs Listen","ouvir / escutar"],
+ [8,"modulo13_aula8.html","🧠","Remember vs Remind","lembrar"],
+ [9,"modulo13_aula9.html","🏆","Win / Earn / Gain","ganhar"],
+ [10,"modulo13_aula10.html","✅","Good vs Well","adjetivo / advérbio"],
+ [11,"modulo13_aula11.html","🔤","Its vs It's","apóstrofo"],
+ [12,"modulo13_aula12.html","🔡","Your vs You're","homófonos"],
+ [13,"modulo13_aula13.html","📝","Their / There / They're","soam igual"],
+ [14,"modulo13_aula14.html","🔢","To / Too / Two","soam igual"],
+ [15,"modulo13_aula15.html","⚖️","Then vs Than","tempo / comparação"],
+ [16,"modulo13_aula16.html","💊","Affect vs Effect","advice / advise"],
+ [17,"modulo13_aula17.html","⬆️","Rise vs Raise","lie / lay"],
+ [18,"modulo13_aula18.html","💼","Job vs Work","house / home"],
+ [19,"modulo13_aula19.html","😄","Fun vs Funny","hard / hardly"],
+ [20,"modulo13_aula20.html","🎓","Revisão do Módulo 13","Module 13 review"],
+];
+const M14=[
+ [1,"modulo14_aula1.html","🔀","US x UK: palavras","apartment / flat"],
+ [2,"modulo14_aula2.html","🍟","Comida","fries / chips"],
+ [3,"modulo14_aula3.html","👖","Roupas","pants / trousers"],
+ [4,"modulo14_aula4.html","🚗","Transporte","gas / petrol"],
+ [5,"modulo14_aula5.html","🏠","Casa","faucet / tap"],
+ [6,"modulo14_aula6.html","🎓","Escola & trabalho","math / maths"],
+ [7,"modulo14_aula7.html","🎨","Spelling","color / colour"],
+ [8,"modulo14_aula8.html","🗣️","Pronúncia","schedule"],
+ [9,"modulo14_aula9.html","📐","Gramática","have / have got"],
+ [10,"modulo14_aula10.html","🛒","Dinheiro & compras","line / queue"],
+ [11,"modulo14_aula11.html","📱","Celular & tech","cell / mobile"],
+ [12,"modulo14_aula12.html","🧭","Direções & lugares","restroom / toilet"],
+ [13,"modulo14_aula13.html","😅","Pegadinhas!","pants / rubber ⚠️"],
+ [14,"modulo14_aula14.html","🕐","Tempo, datas & números","date format"],
+ [15,"modulo14_aula15.html","😎","Gírias","buddy / mate"],
+ [16,"modulo14_aula16.html","🩺","Saúde","drugstore / chemist"],
+ [17,"modulo14_aula17.html","💼","Trabalho & vida","resume / CV"],
+ [18,"modulo14_aula18.html","🤔","Qual aprender?","dicas"],
+ [19,"modulo14_aula19.html","🏋️","Praticando","mix geral"],
+ [20,"modulo14_aula20.html","🎓","Revisão do Módulo 14","Module 14 review"],
+];
+const M15=[
+ [1,"modulo15_aula1.html","💬","Siglas (LOL, BTW)","Texting"],
+ [2,"modulo15_aula2.html","📲","Redes sociais","post, like, share"],
+ [3,"modulo15_aula3.html","🖱️","Ações na internet","click, scroll"],
+ [4,"modulo15_aula4.html","📧","E-mail & mensagens","reply, attach"],
+ [5,"modulo15_aula5.html","📺","Vídeo & streaming","stream, subscribe"],
+ [6,"modulo15_aula6.html","🎮","Games","level up, lag"],
+ [7,"modulo15_aula7.html","🐞","Problemas técnicos","crash, bug"],
+ [8,"modulo15_aula8.html","🛒","Compras online","checkout, refund"],
+ [9,"modulo15_aula9.html","💻","Reuniões online","mute, screen share"],
+ [10,"modulo15_aula10.html","😎","Gírias de internet","cringe, sus"],
+ [11,"modulo15_aula11.html","💘","Apps de paquera","match, red flag"],
+ [12,"modulo15_aula12.html","🔒","Senhas & segurança","password, scam"],
+ [13,"modulo15_aula13.html","📹","Criação de conteúdo","influencer, algorithm"],
+ [14,"modulo15_aula14.html","🔗","Frases de internet","link in bio"],
+ [15,"modulo15_aula15.html","🔥","Cultura & tendências","go viral, trend"],
+ [16,"modulo15_aula16.html","🔤","Mais siglas (IRL, FOMO)","abbreviations"],
+ [17,"modulo15_aula17.html","🤝","Netiqueta & tom","all caps, reply all"],
+ [18,"modulo15_aula18.html","😂","Emojis & reações","fire, 100, skull"],
+ [19,"modulo15_aula19.html","🏋️","Praticando","mix geral"],
+ [20,"modulo15_aula20.html","🎓","Revisão do Módulo 15","Module 15 review"],
+];
+const M16=[
+ [1,"modulo16_aula1.html","📧","E-mail formal","Formal email"],
+ [2,"modulo16_aula2.html","💌","E-mail informal","Informal message"],
+ [3,"modulo16_aula3.html","📄","Carta de apresentação","Cover letter"],
+ [4,"modulo16_aula4.html","😤","Reclamação","Complaint letter"],
+ [5,"modulo16_aula5.html","🙏","Agradecimento","Thank-you notes"],
+ [6,"modulo16_aula6.html","🎉","Convite & resposta","Invitations"],
+ [7,"modulo16_aula7.html","🙋","Fazer pedidos","Written requests"],
+ [8,"modulo16_aula8.html","🙇","Pedir desculpa","Written apologies"],
+ [9,"modulo16_aula9.html","📱","Legendas & posts","Captions"],
+ [10,"modulo16_aula10.html","🔗","Conectores de escrita","Linking words"],
+ [11,"modulo16_aula11.html","📐","Estrutura de parágrafo","Paragraphs"],
+ [12,"modulo16_aula12.html","💭","Dar opinião","Opinion writing"],
+ [13,"modulo16_aula13.html","🖼️","Descrever","Descriptive writing"],
+ [14,"modulo16_aula14.html","📖","Contar história","Narrative"],
+ [15,"modulo16_aula15.html","📝","Resumir","Summarizing"],
+ [16,"modulo16_aula16.html","❓","Pontuação & maiúsculas","Punctuation"],
+ [17,"modulo16_aula17.html","🚨","Erros comuns","Common mistakes"],
+ [18,"modulo16_aula18.html","✒️","Redação de opinião","Opinion essay"],
+ [19,"modulo16_aula19.html","🏋️","Praticando","Practice"],
+ [20,"modulo16_aula20.html","🎓","Revisão do Módulo 16","Module 16 review"],
+];
+const M17=[
+ [1,"modulo17_aula1.html","💯","Números grandes","Big numbers"],
+ [2,"modulo17_aula2.html","💵","Preços & dinheiro","Prices"],
+ [3,"modulo17_aula3.html","📅","Datas","Dates"],
+ [4,"modulo17_aula4.html","📆","Dizer os anos","Saying years"],
+ [5,"modulo17_aula5.html","📞","Telefone","Phone numbers"],
+ [6,"modulo17_aula6.html","🥇","Ordinais","Ordinal numbers"],
+ [7,"modulo17_aula7.html","➗","Frações","Fractions"],
+ [8,"modulo17_aula8.html","📊","Decimais & %","Decimals & %"],
+ [9,"modulo17_aula9.html","➕","Matemática","Math operations"],
+ [10,"modulo17_aula10.html","📏","Comprimento & distância","Length"],
+ [11,"modulo17_aula11.html","⚖️","Peso","Weight"],
+ [12,"modulo17_aula12.html","🌡️","Temperatura","Temperature"],
+ [13,"modulo17_aula13.html","🎂","Idade & tempo","Age"],
+ [14,"modulo17_aula14.html","🍶","Quantidades","Containers"],
+ [15,"modulo17_aula15.html","💳","Verbos de dinheiro","Money verbs"],
+ [16,"modulo17_aula16.html","🛒","Comprar & pagar","Shopping"],
+ [17,"modulo17_aula17.html","🚨","Erros com números","thirteen / thirty"],
+ [18,"modulo17_aula18.html","📈","Números no contexto","In context"],
+ [19,"modulo17_aula19.html","🏋️","Praticando","Practice"],
+ [20,"modulo17_aula20.html","🎓","Revisão do Módulo 17","Module 17 review"],
+];
+const M18=[
+ [1,"modulo18_aula1.html","🧍","Aparência física","Physical appearance"],
+ [2,"modulo18_aula2.html","💇","Cabelo & rosto","Hair and face"],
+ [3,"modulo18_aula3.html","👕","Roupa & estilo","Clothes and style"],
+ [4,"modulo18_aula4.html","🧠","Personalidade","Personality"],
+ [5,"modulo18_aula5.html","😊","Sentimentos & humor","Feelings and moods"],
+ [6,"modulo18_aula6.html","🏙️","Descrever lugares","Describing places"],
+ [7,"modulo18_aula7.html","🌳","Descrever natureza","Describing nature"],
+ [8,"modulo18_aula8.html","📦","Descrever objetos","Describing objects"],
+ [9,"modulo18_aula9.html","🍽️","Descrever comida","Describing food"],
+ [10,"modulo18_aula10.html","🔤","Ordem dos adjetivos","Adjective order"],
+ [11,"modulo18_aula11.html","🔊","Intensificadores","Intensifiers"],
+ [12,"modulo18_aula12.html","🖼️","Descrever uma foto","Describing a picture"],
+ [13,"modulo18_aula13.html","⚖️","Semelhanças & diferenças","Similarities"],
+ [14,"modulo18_aula14.html","🏠","Descrever uma casa","Describing a home"],
+ [15,"modulo18_aula15.html","🌦️","Descrever o tempo","Describing weather"],
+ [16,"modulo18_aula16.html","🔄","Descrever mudanças","Describing changes"],
+ [17,"modulo18_aula17.html","🔁","Hábitos & rotinas","Describing habits"],
+ [18,"modulo18_aula18.html","💥","Adjetivos avançados","Advanced adjectives"],
+ [19,"modulo18_aula19.html","🎯","Praticando","Describing practice"],
+ [20,"modulo18_aula20.html","🎓","Revisão do Módulo 18","Module 18 review"],
+];
+const M19=[
+ [1,"modulo19_aula1.html","🩺","No médico","At the doctor"],
+ [2,"modulo19_aula2.html","🦴","Partes do corpo","Parts of the body"],
+ [3,"modulo19_aula3.html","🤒","Doenças comuns","Common illnesses"],
+ [4,"modulo19_aula4.html","💊","Na farmácia","At the pharmacy"],
+ [5,"modulo19_aula5.html","🩹","Machucados & acidentes","Injuries"],
+ [6,"modulo19_aula6.html","📅","Marcar consulta","Appointment"],
+ [7,"modulo19_aula7.html","🥗","Hábitos saudáveis","Healthy habits"],
+ [8,"modulo19_aula8.html","🍎","Alimentação","Food & nutrition"],
+ [9,"modulo19_aula9.html","🏃","Exercício","Exercise & fitness"],
+ [10,"modulo19_aula10.html","😴","Sono & descanso","Sleep & rest"],
+ [11,"modulo19_aula11.html","🧘","Saúde mental","Mental health"],
+ [12,"modulo19_aula12.html","😊","Emoções & bem-estar","Emotions"],
+ [13,"modulo19_aula13.html","🦷","No dentista","At the dentist"],
+ [14,"modulo19_aula14.html","🚑","Emergências","Emergencies"],
+ [15,"modulo19_aula15.html","🏥","No hospital","At the hospital"],
+ [16,"modulo19_aula16.html","😖","Descrever a dor","Describing pain"],
+ [17,"modulo19_aula17.html","💬","Dar conselhos","Giving advice"],
+ [18,"modulo19_aula18.html","🌿","Autocuidado","Self-care"],
+ [19,"modulo19_aula19.html","🎯","Praticando","Health practice"],
+ [20,"modulo19_aula20.html","🎓","Revisão do Módulo 19","Module 19 review"],
+];
+const M20=[
+ [1,"modulo20_aula1.html","😎","Gírias do dia a dia","Everyday slang"],
+ [2,"modulo20_aula2.html","🔗","Phrasal verbs","Phrasal verbs"],
+ [3,"modulo20_aula3.html","💭","Expressões idiomáticas","Idioms"],
+ [4,"modulo20_aula4.html","💬","Puxar conversa","Small talk"],
+ [5,"modulo20_aula5.html","😲","Reagir como nativo","Reacting"],
+ [6,"modulo20_aula6.html","🎬","Filmes & séries","Movies & TV"],
+ [7,"modulo20_aula7.html","🎵","Música","Music"],
+ [8,"modulo20_aula8.html","📱","Redes sociais & memes","Social media"],
+ [9,"modulo20_aula9.html","⌨️","Siglas de mensagem","Texting"],
+ [10,"modulo20_aula10.html","📅","Falar do fim de semana","The weekend"],
+ [11,"modulo20_aula11.html","🗣️","Opinar & concordar","Opinions"],
+ [12,"modulo20_aula12.html","📖","Contar uma história","Storytelling"],
+ [13,"modulo20_aula13.html","😄","Humor & piadas","Humor"],
+ [14,"modulo20_aula14.html","⚽","Esportes & jogos","Sports & games"],
+ [15,"modulo20_aula15.html","🍽️","Comer fora","Going out"],
+ [16,"modulo20_aula16.html","🤝","Combinar planos","Making plans"],
+ [17,"modulo20_aula17.html","📞","Telefone & videochamada","Calls"],
+ [18,"modulo20_aula18.html","💫","Muletas & soar fluente","Fillers"],
+ [19,"modulo20_aula19.html","🗨️","Conversa real","Conversation"],
+ [20,"modulo20_aula20.html","🎓","Formatura — You did it!","Graduation"],
+];
+const CONVS=[
+ [1,"conversa1.html","🏖️","Planos de fim de semana","A2·B1 · amigos"],
+ [2,"conversa2.html","☕","No café","A2 · pedir"],
+ [3,"conversa3.html","🎉","Conhecendo alguém","A2 · social"],
+ [4,"conversa4.html","✈️","No aeroporto","B1 · check-in"],
+ [5,"conversa5.html","💼","Entrevista de emprego","B1 · trabalho"],
+ [6,"conversa6.html","🩺","No médico","B1 · saúde"],
+ [7,"conversa7.html","🛍️","Reclamação numa loja","B2 · reclamar"],
+ [8,"conversa8.html","💘","Combinando um encontro","B2 · social"],
+];
+const GROUPS={m1:M1,m2:M2,m3:M3,m4:M4,m5:M5,m6:M6,m7:M7,m8:M8,m9:M9,m10:M10,m11:M11,m12:M12,m13:M13,m14:M14,m15:M15,m16:M16,m17:M17,m18:M18,m19:M19,m20:M20,conversas:CONVS,labs:LABS};
+const ALL=[...M1,...M2,...M3,...M4,...M5,...M6,...M7,...M8,...M9,...M10,...M11,...M12,...M13,...M14,...M15,...M16,...M17,...M18,...M19,...M20,...LABS];
+const KEY="fluent_home_v1";
+let ST={done:{},xp:0,streak:0,last:"",day:{d:"",n:0}};
+try{const r=localStorage.getItem(KEY); if(r) ST=Object.assign(ST,JSON.parse(r));}catch(e){}
+if(!ST.day) ST.day={d:"",n:0};
+function save(){try{localStorage.setItem(KEY,JSON.stringify(ST));}catch(e){}}
+function today(){try{return new Date().toISOString().slice(0,10);}catch(e){return "";}}
+function id(f){return f.replace(/\W/g,"_");}
+function isDone(f){return !!ST.done[id(f)];}
+function doneCount(){return ALL.filter(x=>isDone(x[1])).length;}
+
+function row(item,isLab){
+  const [n,file,emoji,pt,en]=item;
+  const d=document.createElement("div"); d.className="lrow"+(isDone(file)?" done":""); d.dataset.file=file;
+  d.innerHTML='<a class="open" href="'+file+'"><span class="n">'+n+'</span><span class="emoji">'+emoji+'</span>'+
+    '<span class="ltext"><b>'+pt+'</b><small>'+en+'</small></span><span class="go">›</span></a>'+
+    '<button class="check" aria-label="Concluir">'+(isDone(file)?'✓':'')+'</button>';
+  d.querySelector(".open").addEventListener("click",()=>markDone(file,true));
+  d.querySelector(".check").addEventListener("click",e=>{e.preventDefault();e.stopPropagation();toggle(file,d);});
+  return d;
+}
+function render(){
+  for(const k in GROUPS){ const el=document.getElementById("list_"+k); el.innerHTML="";
+    GROUPS[k].forEach(x=>el.appendChild(row(x,k==="labs"))); }
+  refresh();
+}
+function markDone(file,silent){
+  if(!ST.done[id(file)]){
+    ST.done[id(file)]=true; ST.xp+=10;
+    const t=today();
+    if(ST.last!==t){ ST.streak=(ST.streak||0)+1; ST.last=t; }
+    if(ST.day.d!==t){ ST.day={d:t,n:0}; }
+    ST.day.n++; save();
+    if(!silent){ const r=document.querySelector('.lrow[data-file="'+file+'"]'); if(r){r.classList.add("done");r.querySelector(".check").textContent="✓";} refresh(); }
+  }
+}
+function toggle(file,d){
+  if(ST.done[id(file)]){ delete ST.done[id(file)]; ST.xp=Math.max(0,ST.xp-10); d.classList.remove("done"); d.querySelector(".check").textContent=""; }
+  else { ST.done[id(file)]=true; ST.xp+=10; d.classList.add("done"); d.querySelector(".check").textContent="✓"; }
+  save(); refresh();
+}
+function refresh(){
+  const done=doneCount();
+  document.getElementById("xp").innerHTML="⭐ <span class='num'>"+ST.xp+"</span>";
+  document.getElementById("fire").innerHTML="🔥 <span class='num'>"+(ST.streak||0)+"</span>";
+  // nivel
+  const lv=Math.floor(ST.xp/100)+1, inLv=ST.xp%100;
+  document.getElementById("lvBadge").textContent=lv;
+  document.getElementById("lvTitle").textContent="Nível "+lv;
+  document.getElementById("lvSub").textContent="Faltam "+(100-inLv)+" XP para o Nível "+(lv+1);
+  document.getElementById("lvPct").textContent=inLv+"%";
+  document.getElementById("lvBar").style.width=inLv+"%";
+  // meta diaria
+  const t=today(); const dn=(ST.day&&ST.day.d===t)?ST.day.n:0; const goal=3;
+  document.getElementById("dayn").textContent=Math.min(dn,goal)+"/"+goal;
+  const pct=Math.min(1,dn/goal);
+  requestAnimationFrame(()=>{ document.getElementById("rc").style.strokeDashoffset=(157*(1-pct)).toFixed(1); });
+  // continuar
+  const next=ALL.find(x=>!isDone(x[1]));
+  const cont=document.getElementById("continue");
+  const modOf=x=> M1.includes(x)?"Módulo 1":M2.includes(x)?"Módulo 2":M3.includes(x)?"Módulo 3":M4.includes(x)?"Módulo 4":M5.includes(x)?"Módulo 5":M6.includes(x)?"Módulo 6":M7.includes(x)?"Módulo 7":M8.includes(x)?"Módulo 8":M9.includes(x)?"Módulo 9":M10.includes(x)?"Módulo 10":M11.includes(x)?"Módulo 11":M12.includes(x)?"Módulo 12":M13.includes(x)?"Módulo 13":M14.includes(x)?"Módulo 14":M15.includes(x)?"Módulo 15":M16.includes(x)?"Módulo 16":M17.includes(x)?"Módulo 17":M18.includes(x)?"Módulo 18":M19.includes(x)?"Módulo 19":M20.includes(x)?"Módulo 20":"Labs";
+  const greet=document.getElementById("greet"), gsub=document.getElementById("greetsub");
+  if(!next){
+    cont.href=M20[19][1]; document.getElementById("contEye").textContent="Curso concluído! 🎓";
+    document.getElementById("contTitle").textContent="Você é fluente! Revisar";
+    document.getElementById("contSub").textContent="Você terminou todas as aulas!";
+    document.getElementById("contBar").style.width="100%";
+    greet.textContent="Você é fera! 🏆"; gsub.textContent="Revise pra fixar de vez.";
+  } else {
+    const isFirst=done===0;
+    cont.href=next[1]; cont.onclick=()=>markDone(next[1],true);
+    document.getElementById("contEye").textContent=isFirst?"Comece agora":"Continue de onde parou";
+    document.getElementById("contTitle").textContent=next[3];
+    document.getElementById("contSub").textContent=modOf(next)+" · Aula "+next[0]+" — "+next[4];
+    document.getElementById("contBar").style.width=Math.round(done/ALL.length*100)+"%";
+    greet.textContent=isFirst?"Bora falar inglês? 👋":"Bem-vindo de volta! 👋";
+    gsub.textContent=isFirst?"Sua primeira aula te espera.":"Próxima: "+next[3];
+  }
+}
+
+// tabs
+document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click",()=>{
+  document.querySelectorAll(".tab").forEach(x=>x.classList.remove("on")); t.classList.add("on");
+  try{ t.scrollIntoView({inline:"center",block:"nearest",behavior:"smooth"}); }catch(e){}
+  ["m1","m2","m3","m4","m5","m6","m7","m8","m9","m10","m11","m12","m13","m14","m15","m16","m17","m18","m19","m20","conversas","labs"].forEach(k=>{const p=document.getElementById("pane_"+k); if(p) p.classList.toggle("hide",k!==t.dataset.t);});
+}));
+// nav
+const dev=document.querySelector(".device");
+document.getElementById("navHome").onclick=()=>dev.scrollTo({top:0,behavior:"smooth"});
+document.getElementById("navTrail").onclick=()=>document.querySelector(".tabs").scrollIntoView({behavior:"smooth",block:"start"});
+document.getElementById("navPractice").onclick=()=>{ document.querySelector('.tab[data-t="labs"]').click(); document.querySelector(".tabs").scrollIntoView({behavior:"smooth"}); };
+document.getElementById("navProfile").onclick=()=>alert("Perfil e sincronização entre aparelhos: em breve no Falo! 😉");
+document.getElementById("premBtn").onclick=()=>alert("Assinatura Falo Premium: em breve! Por enquanto, aproveite tudo liberado. 🎉");
+// theme
+const tb=document.getElementById("theme");
+function apply(m){document.documentElement.setAttribute("data-theme",m); tb.textContent=m==="dark"?"☀️":"🌙";}
+try{apply(localStorage.getItem("falo_theme")|| (matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light"));}catch(e){apply("light");}
+tb.onclick=()=>{const m=document.documentElement.getAttribute("data-theme")==="dark"?"light":"dark"; apply(m); try{localStorage.setItem("falo_theme",m);}catch(e){}};
+// reset
+document.getElementById("reset").addEventListener("click",()=>{ if(confirm("Zerar todo o progresso?")){ ST={done:{},xp:0,streak:0,last:"",day:{d:"",n:0}}; save(); render(); }});
+
+render();
+window.addEventListener("pageshow",render);
+
+// PWA: registra o service worker (só funciona servido por http/https, não em file://)
+if("serviceWorker" in navigator){ window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{})); }
+</script>
+</body>
+</html>
