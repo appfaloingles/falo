@@ -916,6 +916,54 @@ function startOnboard(){
 }
 startOnboard();
 
+// ---- Etapa 4: Trilha visual (mapa de jornada) ----
+document.head.insertAdjacentHTML("beforeend","<style>"+
+"#trilhaView{position:fixed;inset:0;z-index:500;background:var(--ground);display:flex;flex-direction:column}"+
+".tr-top{display:flex;align-items:center;gap:10px;padding:15px 18px;border-bottom:1px solid var(--line);background:var(--ground)}"+
+".tr-top b{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:18px;color:var(--ink)}"+
+".tr-top .x{margin-left:auto;background:var(--surface-2);border:0;width:34px;height:34px;border-radius:10px;font-size:15px;color:var(--ink);cursor:pointer}"+
+"#trBody{flex:1;overflow:auto;padding:4px 0 94px}"+
+".tr-mod{padding:2px 0 6px}"+
+".tr-modhead{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 4px}"+
+".tr-modhead b{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:14px;color:var(--ink)}"+
+".tr-modhead span{font-size:12px;font-weight:700;color:var(--ink-soft);background:var(--surface-2);padding:3px 9px;border-radius:999px;white-space:nowrap;margin-left:10px}"+
+".tr-path{display:flex;flex-direction:column;align-items:center;gap:15px;padding:10px 0}"+
+".tr-node{transform:translateX(var(--off));width:58px;height:58px;border-radius:50%;display:grid;place-items:center;text-decoration:none;position:relative;box-shadow:var(--shadow-sm);transition:transform .12s}"+
+".tr-node:active{transform:translateX(var(--off)) scale(.92)}"+
+".tr-node .tr-ic{font-size:24px;line-height:1}"+
+".tr-node.done{background:var(--teal);color:#fff}.tr-node.done .tr-ic{font-size:23px;font-weight:800}"+
+".tr-node.now{background:var(--brand);color:#fff;animation:trpulse 1.7s ease-in-out infinite}"+
+".tr-node.lock{background:var(--surface);border:2px solid var(--line);opacity:.72}"+
+"@keyframes trpulse{0%,100%{box-shadow:0 0 0 5px var(--brand-soft),var(--shadow-sm)}50%{box-shadow:0 0 0 12px transparent,var(--shadow-sm)}}"+
+".tr-flag{position:absolute;top:-15px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--ground);font-size:9px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;letter-spacing:.4px}"+
+"</style>");
+document.body.insertAdjacentHTML("beforeend",'<div id="trilhaView" class="hide"><div class="tr-top"><b>🗺️ Sua trilha</b><button class="x" id="trClose" aria-label="Fechar">✕</button></div><div id="trBody"></div></div>');
+const TRKEYS=["m1","m2","m3","m4","m5","m6","m7","m8","m9","m10","m11","m12","m13","m14","m15","m16","m17","m18","m19","m20"];
+function curFileTr(){ let cur=ALL.find(x=>!isDone(x[1])&&x[1].indexOf("modulo")===0); if(doneCount()===0&&ST.start){ const s=ALL.find(x=>x[1]===ST.start); if(s) cur=s; } return cur?cur[1]:null; }
+function renderTrilha(){
+  const host=document.getElementById("trBody"); if(!host) return;
+  const offs=[0,44,0,-44]; const cf=curFileTr(); let html="";
+  TRKEYS.forEach(k=>{ const arr=GROUPS[k]; if(!arr) return;
+    const head=(document.querySelector("#pane_"+k+" .sect")||{}).textContent||k;
+    const dn=arr.filter(x=>isDone(x[1])).length;
+    html+='<div class="tr-mod"><div class="tr-modhead"><b>'+head+'</b><span>'+dn+'/'+arr.length+'</span></div><div class="tr-path">';
+    arr.forEach((it,i)=>{ const file=it[1], done=isDone(file), now=(file===cf);
+      const cls=done?'done':(now?'now':'lock');
+      html+='<a class="tr-node '+cls+'" href="'+file+'" data-file="'+file+'" style="--off:'+offs[i%4]+'px" title="'+it[3]+'"><span class="tr-ic">'+(done?'✓':it[2])+'</span>'+(now?'<span class="tr-flag">COMECE</span>':'')+'</a>';
+    });
+    html+='</div></div>';
+  });
+  host.innerHTML=html;
+  host.querySelectorAll(".tr-node").forEach(a=>a.addEventListener("click",()=>markDone(a.dataset.file,true)));
+  const cn=host.querySelector(".tr-node.now"); if(cn) setTimeout(()=>{try{cn.scrollIntoView({block:"center"});}catch(e){}},60);
+}
+function showTrilha(){ renderTrilha(); document.getElementById("trilhaView").classList.remove("hide"); document.getElementById("navTrail").classList.add("on"); document.getElementById("navHome").classList.remove("on"); }
+function hideTrilha(){ document.getElementById("trilhaView").classList.add("hide"); document.getElementById("navTrail").classList.remove("on"); document.getElementById("navHome").classList.add("on"); }
+document.getElementById("navTrail").onclick=showTrilha;
+document.getElementById("trClose").onclick=hideTrilha;
+document.getElementById("navHome").onclick=()=>{ hideTrilha(); dev.scrollTo({top:0,behavior:"smooth"}); };
+window.addEventListener("pageshow",()=>{ if(!document.getElementById("trilhaView").classList.contains("hide")) renderTrilha(); });
+
 // ---- Instalar como app (PWA) ----
 let deferredPrompt=null;
 function isStandalone(){try{return matchMedia("(display-mode: standalone)").matches||navigator.standalone===true;}catch(e){return false;}}

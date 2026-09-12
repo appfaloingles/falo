@@ -1,6 +1,6 @@
 /* Falo · service worker — network-first p/ páginas (sempre atualiza online),
    cache-first p/ ícones/estáticos, e tudo funciona offline depois de visitado. */
-const CACHE = "falo-v6";
+const CACHE = "falo-v7";
 const SHELL = ["index.html", "manifest.webmanifest", "icon-192.png", "icon-512.png", "apple-touch-icon.png"];
 
 self.addEventListener("install", (e) => {
