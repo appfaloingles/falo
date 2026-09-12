@@ -721,6 +721,27 @@ let ST={done:{},xp:0,streak:0,last:"",day:{d:"",n:0}};
 try{const r=localStorage.getItem(KEY); if(r) ST=Object.assign(ST,JSON.parse(r));}catch(e){}
 if(!ST.day) ST.day={d:"",n:0};
 function save(){try{localStorage.setItem(KEY,JSON.stringify(ST));}catch(e){}}
+// ---- Feedback sensorial (som, confete, vibração) — "cara de app" ----
+document.head.insertAdjacentHTML("beforeend","<style>"+
+".cfti{position:fixed;top:-14px;width:9px;height:14px;border-radius:2px;z-index:9999;pointer-events:none;animation:cf 1.5s ease-in forwards}"+
+"@keyframes cf{to{transform:translateY(105vh) translateX(calc(var(--x)*140px)) rotate(var(--r));opacity:.15}}"+
+".ftoast{position:fixed;left:50%;bottom:96px;transform:translate(-50%,18px);background:var(--ink);color:var(--ground);padding:10px 16px;border-radius:999px;font-weight:800;font-size:14px;z-index:9999;opacity:0;transition:opacity .28s,transform .28s;box-shadow:var(--shadow)}"+
+".ftoast.show{opacity:1;transform:translate(-50%,0)}"+
+".installbar{position:fixed;left:12px;right:12px;bottom:12px;max-width:420px;margin:0 auto;display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow);border-radius:16px;padding:12px 14px;z-index:9998;transform:translateY(160%);transition:transform .4s cubic-bezier(.2,.8,.2,1)}"+
+".installbar.show{transform:translateY(0)}"+
+".installbar .ib-ic{font-size:24px}.installbar .ib-tx{flex:1;line-height:1.25}"+
+".installbar .ib-tx b{display:block;font-size:14px;color:var(--ink)}.installbar .ib-tx small{color:var(--ink-soft);font-size:12px}"+
+".installbar .ib-yes{background:var(--brand);color:#fff;border:0;border-radius:10px;padding:9px 14px;font-weight:800;font-size:13px;cursor:pointer}"+
+".installbar .ib-no{background:transparent;border:0;color:var(--ink-soft);font-size:18px;cursor:pointer;padding:2px 6px}"+
+"</style>");
+let _ac=null; function _actx(){try{_ac=_ac||new(window.AudioContext||window.webkitAudioContext)();}catch(e){_ac=null;}return _ac;}
+function beep(freq,dur,type,when,gain){const a=_actx();if(!a)return;const o=a.createOscillator(),g=a.createGain();o.type=type||"sine";o.frequency.value=freq;o.connect(g);g.connect(a.destination);const t0=a.currentTime+(when||0);g.gain.setValueAtTime(gain||0.05,t0);g.gain.exponentialRampToValueAtTime(0.0001,t0+dur);o.start(t0);o.stop(t0+dur);}
+function sfx(kind){if(ST.mute)return;if(kind==="level"){[523,659,784,1047].forEach((f,i)=>beep(f,.2,"triangle",i*.1,.06));}else if(kind==="xp"){beep(660,.12,"triangle",0,.05);beep(990,.13,"triangle",.09,.05);}else{beep(520,.07,"sine",0,.035);}}
+function haptic(p){try{if(navigator.vibrate)navigator.vibrate(p);}catch(e){}}
+function confetti(n){n=n||90;const cols=["#FF5630","#0FB39B","#F5A623","#FF7B4D","#7A5CFF"];for(let i=0;i<n;i++){const p=document.createElement("i");p.className="cfti";p.style.left=(Math.random()*100)+"%";p.style.background=cols[i%cols.length];p.style.setProperty("--x",(Math.random()*2-1).toFixed(2));p.style.setProperty("--r",(Math.floor(Math.random()*720-360))+"deg");p.style.animationDelay=(Math.random()*.25)+"s";document.body.appendChild(p);setTimeout(()=>p.remove(),1750);}}
+function toast(msg){const el=document.createElement("div");el.className="ftoast";el.textContent=msg;document.body.appendChild(el);requestAnimationFrame(()=>el.classList.add("show"));setTimeout(()=>{el.classList.remove("show");setTimeout(()=>el.remove(),320);},1500);}
+function lvOf(xp){return Math.floor(xp/100)+1;}
+function celebrate(up,lv){if(up){sfx("level");haptic([0,40,50,40,50,90]);confetti(130);toast("🎉 Nível "+lv+"!");}else{sfx("xp");haptic(20);toast("+10 XP ⭐");}}
 function today(){try{return new Date().toISOString().slice(0,10);}catch(e){return "";}}
 function id(f){return f.replace(/\W/g,"_");}
 function isDone(f){return !!ST.done[id(f)];}
@@ -752,9 +773,8 @@ function markDone(file,silent){
   }
 }
 function toggle(file,d){
-  if(ST.done[id(file)]){ delete ST.done[id(file)]; ST.xp=Math.max(0,ST.xp-10); d.classList.remove("done"); d.querySelector(".check").textContent=""; }
-  else { ST.done[id(file)]=true; ST.xp+=10; d.classList.add("done"); d.querySelector(".check").textContent="✓"; }
-  save(); refresh();
+  if(ST.done[id(file)]){ delete ST.done[id(file)]; ST.xp=Math.max(0,ST.xp-10); d.classList.remove("done"); d.querySelector(".check").textContent=""; save(); refresh(); }
+  else { const prev=ST.xp; ST.done[id(file)]=true; ST.xp+=10; d.classList.add("done"); d.querySelector(".check").textContent="✓"; save(); refresh(); celebrate(lvOf(ST.xp)>lvOf(prev), lvOf(ST.xp)); }
 }
 function refresh(){
   const done=doneCount();
@@ -818,6 +838,17 @@ document.getElementById("reset").addEventListener("click",()=>{ if(confirm("Zera
 
 render();
 window.addEventListener("pageshow",render);
+
+// ---- Instalar como app (PWA) ----
+let deferredPrompt=null;
+function isStandalone(){try{return matchMedia("(display-mode: standalone)").matches||navigator.standalone===true;}catch(e){return false;}}
+function isIOS(){return /iphone|ipad|ipod/i.test(navigator.userAgent);}
+function instDismissed(){try{return localStorage.getItem("falo_install_dismiss")==="1";}catch(e){return false;}}
+function hideInstall(){const b=document.getElementById("installBar");if(b)b.classList.remove("show");}
+function buildInstall(html,onYes){let b=document.getElementById("installBar");if(b)b.remove();b=document.createElement("div");b.id="installBar";b.className="installbar";b.innerHTML=html;document.body.appendChild(b);const no=b.querySelector(".ib-no");if(no)no.onclick=()=>{hideInstall();try{localStorage.setItem("falo_install_dismiss","1");}catch(e){}};const yes=b.querySelector(".ib-yes");if(yes&&onYes)yes.onclick=onYes;requestAnimationFrame(()=>b.classList.add("show"));}
+window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredPrompt=e;if(isStandalone()||instDismissed())return;buildInstall('<span class="ib-ic">📲</span><div class="ib-tx"><b>Instalar o Falo</b><small>Use como app, direto da tela inicial</small></div><button class="ib-yes">Instalar</button><button class="ib-no" aria-label="Fechar">✕</button>',async()=>{if(!deferredPrompt)return;deferredPrompt.prompt();try{await deferredPrompt.userChoice;}catch(e){}deferredPrompt=null;hideInstall();});});
+window.addEventListener("appinstalled",()=>{hideInstall();toast("Falo instalado! 🎉");});
+if(isIOS()&&!isStandalone()&&!instDismissed()){setTimeout(()=>buildInstall('<span class="ib-ic">📲</span><div class="ib-tx"><b>Instalar o Falo</b><small>Toque em Compartilhar ⬆️ e “Adicionar à Tela de Início”</small></div><button class="ib-no" aria-label="Fechar">✕</button>'),1800);}
 
 // PWA: registra o service worker (só funciona servido por http/https, não em file://)
 if("serviceWorker" in navigator){ window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{})); }
