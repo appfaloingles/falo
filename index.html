@@ -975,10 +975,9 @@ window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredPro
 window.addEventListener("appinstalled",()=>{hideInstall();toast("Falo instalado! 🎉");});
 if(isIOS()&&!isStandalone()&&!instDismissed()){setTimeout(()=>buildInstall('<span class="ib-ic">📲</span><div class="ib-tx"><b>Instalar o Falo</b><small>Toque em Compartilhar ⬆️ e “Adicionar à Tela de Início”</small></div><button class="ib-no" aria-label="Fechar">✕</button>'),1800);}
 
-// PWA: registra o service worker + AUTO-ATUALIZA (usuário nunca precisa limpar cache)
+// PWA: registra o service worker (rede-primeiro já mantém a home sempre atualizada;
+// SEM recarregamento automático, pra nunca arriscar travar a tela).
 if("serviceWorker" in navigator){
-  const hadCtrl=!!navigator.serviceWorker.controller; let reloaded=false;
-  navigator.serviceWorker.addEventListener("controllerchange",()=>{ if(reloaded) return; reloaded=true; if(hadCtrl) location.reload(); });
   window.addEventListener("load",()=>{ navigator.serviceWorker.register("sw.js").then(reg=>{ try{reg.update();}catch(e){} }).catch(()=>{}); });
 }
 </script>

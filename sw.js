@@ -3,7 +3,7 @@
    - Cacheia só o "shell" leve (home + ícones) para instalar/abrir offline.
    - NÃO cacheia as aulas (são pesadas, ~200MB) — evita estourar o armazenamento do celular.
    - Auto-atualiza: assume o controle na hora e limpa caches antigos. */
-const CACHE = "falo-v8";
+const CACHE = "falo-v9";
 const SHELL = ["index.html", "manifest.webmanifest", "icon-192.png", "icon-512.png", "apple-touch-icon.png"];
 
 self.addEventListener("install", (e) => {
