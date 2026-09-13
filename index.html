@@ -832,7 +832,7 @@ document.getElementById("premBtn").onclick=()=>alert("Assinatura Falo Premium: e
 // theme
 const tb=document.getElementById("theme");
 function apply(m){document.documentElement.setAttribute("data-theme",m); tb.textContent=m==="dark"?"☀️":"🌙";}
-try{apply(localStorage.getItem("falo_theme")|| (matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light"));}catch(e){apply("light");}
+try{apply(localStorage.getItem("falo_theme")||"light");}catch(e){apply("light");}
 tb.onclick=()=>{const m=document.documentElement.getAttribute("data-theme")==="dark"?"light":"dark"; apply(m); try{localStorage.setItem("falo_theme",m);}catch(e){}};
 // reset
 document.getElementById("reset").addEventListener("click",()=>{ if(confirm("Zerar todo o progresso?")){ ST={done:{},xp:0,streak:0,last:"",day:{d:"",n:0}}; save(); render(); }});
@@ -967,7 +967,10 @@ function hideTrilha(){ document.getElementById("trilhaView").classList.add("hide
 document.getElementById("navTrail").onclick=showTrilha;
 document.getElementById("trClose").onclick=hideTrilha;
 document.getElementById("navHome").onclick=()=>{ hideTrilha(); dev.scrollTo({top:0,behavior:"smooth"}); };
-window.addEventListener("pageshow",()=>{ if(!document.getElementById("trilhaView").classList.contains("hide")) renderTrilha(); });
+// pré-desenha a trilha JÁ no carregamento (escondida) — abrir vira só "mostrar", sem corrida de tempo
+try{ renderTrilha(); }catch(e){}
+window.addEventListener("load",()=>{ try{ renderTrilha(); }catch(e){} });
+window.addEventListener("pageshow",()=>{ try{ renderTrilha(); }catch(e){} });
 
 // ---- Instalar como app (PWA) ----
 let deferredPrompt=null;
