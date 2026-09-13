@@ -1,7 +1,24 @@
 [build]
   publish = "."
 
+# Nunca deixar o navegador guardar o service worker nem a home antigos —
+# assim toda atualização chega na hora e o app nunca abre uma versão velha.
 [[headers]]
   for = "/sw.js"
+  [headers.values]
+    Cache-Control = "no-cache"
+
+[[headers]]
+  for = "/"
+  [headers.values]
+    Cache-Control = "no-cache"
+
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "no-cache"
+
+[[headers]]
+  for = "/manifest.webmanifest"
   [headers.values]
     Cache-Control = "no-cache"
