@@ -957,7 +957,12 @@ function renderTrilha(){
   host.querySelectorAll(".tr-node").forEach(a=>a.addEventListener("click",()=>markDone(a.dataset.file,true)));
   const cn=host.querySelector(".tr-node.now"); if(cn) setTimeout(()=>{try{cn.scrollIntoView({block:"center"});}catch(e){}},60);
 }
-function showTrilha(){ renderTrilha(); document.getElementById("trilhaView").classList.remove("hide"); document.getElementById("navTrail").classList.add("on"); document.getElementById("navHome").classList.remove("on"); }
+function showTrilha(){ const tv=document.getElementById("trilhaView"); tv.classList.remove("hide"); document.getElementById("navTrail").classList.add("on"); document.getElementById("navHome").classList.remove("on"); renderTrilha();
+  // rede de segurança: se por qualquer corrida de tempo não desenhou, redesenha
+  requestAnimationFrame(()=>{ if(!document.querySelector(".tr-node")) renderTrilha(); });
+  setTimeout(()=>{ if(!document.querySelector(".tr-node")) renderTrilha(); }, 200);
+  setTimeout(()=>{ if(!document.querySelector(".tr-node")) renderTrilha(); }, 600);
+}
 function hideTrilha(){ document.getElementById("trilhaView").classList.add("hide"); document.getElementById("navTrail").classList.remove("on"); document.getElementById("navHome").classList.add("on"); }
 document.getElementById("navTrail").onclick=showTrilha;
 document.getElementById("trClose").onclick=hideTrilha;
