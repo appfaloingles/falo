@@ -89,8 +89,10 @@
   .level .badge{width:44px;height:44px;border-radius:13px;flex:none;display:grid;place-items:center;font-family:"Bricolage Grotesque";font-weight:800;font-size:19px;color:#fff;background:linear-gradient(135deg,var(--teal),#12C9A6)}
   .level .t b{font-family:"Bricolage Grotesque";font-size:16px} .level .t span{display:block;color:var(--ink-soft);font-weight:600;font-size:12.5px}
   .level .pct{margin-left:auto;font-weight:800;color:var(--teal-ink);font-size:14px}
-  .level .barwrap{height:8px;border-radius:999px;background:var(--surface-2);margin-top:12px;overflow:hidden}
-  .level .barwrap>i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--teal),var(--gold));transition:width .5s}
+  .level .barwrap{height:12px;border-radius:999px;background:var(--surface-2);margin-top:13px;overflow:hidden;box-shadow:inset 0 1px 2px rgba(0,0,0,.07)}
+  .level .barwrap>i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--gold),var(--brand));transition:width .6s cubic-bezier(.2,.8,.2,1);position:relative;overflow:hidden}
+  .level .barwrap>i::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 35%,rgba(255,255,255,.55) 50%,transparent 65%);transform:translateX(-120%);animation:barsweep 2.6s ease-in-out infinite}
+  @keyframes barsweep{0%{transform:translateX(-120%)}55%,100%{transform:translateX(260%)}}
 
   .tabs{display:flex;gap:6px;background:var(--surface);padding:6px;border-radius:16px;box-shadow:var(--shadow-sm);position:sticky;top:64px;z-index:20;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
   .tabs::-webkit-scrollbar{display:none}
@@ -138,7 +140,7 @@
   .scroll>*{animation:rise .45s cubic-bezier(.2,.7,.2,1) both}
   .scroll>*:nth-child(2){animation-delay:.04s}.scroll>*:nth-child(3){animation-delay:.08s}.scroll>*:nth-child(4){animation-delay:.12s}.scroll>*:nth-child(5){animation-delay:.16s}
   .ringfill{transition:stroke-dashoffset 1s cubic-bezier(.3,.8,.3,1)}
-  @media (prefers-reduced-motion:reduce){.scroll>*{animation:none}.ringfill{transition:none}.cont .barwrap>i,.level .barwrap>i{transition:none}}
+  @media (prefers-reduced-motion:reduce){.scroll>*{animation:none}.ringfill{transition:none}.cont .barwrap>i,.level .barwrap>i{transition:none}.level .barwrap>i::after{animation:none;display:none}}
 </style>
 </head>
 <body>
@@ -811,7 +813,7 @@ function refresh(){
     document.getElementById("contTitle").textContent=next[3];
     document.getElementById("contSub").textContent=modOf(next)+" · Aula "+next[0]+" — "+next[4];
     document.getElementById("contBar").style.width=Math.round(done/ALL.length*100)+"%";
-    greet.textContent=isFirst?"Bora falar inglês? 👋":"Bem-vindo de volta! 👋";
+    greet.textContent=isFirst?("Bora falar inglês"+(ST.name?", "+ST.name:"")+"? 👋"):("Bem-vindo de volta"+(ST.name?", "+ST.name:"")+"! 👋");
     gsub.textContent=isFirst?(ST.level?("Nível "+ST.level+" · sua trilha começa aqui."):"Sua primeira aula te espera."):"Próxima: "+next[3];
   }
 }
@@ -859,6 +861,8 @@ document.head.insertAdjacentHTML("beforeend","<style>"+
 ".ob-prog i{height:5px;flex:1;border-radius:3px;background:var(--line)}.ob-prog i.on{background:var(--brand)}"+
 ".ob-big{font-size:52px;text-align:center;margin:6px 0}"+
 ".ob-emoji{font-size:20px;margin-right:9px}"+
+".ob-input{width:100%;box-sizing:border-box;background:var(--surface);border:2px solid var(--line);border-radius:14px;padding:15px 16px;font-size:17px;font-weight:600;color:var(--ink);font-family:inherit;margin-bottom:12px;outline:none;transition:border-color .15s}"+
+".ob-input:focus{border-color:var(--brand)}"+
 "</style>");
 function startOnboard(){
   if(ST.onboarded) return;
@@ -878,23 +882,31 @@ function startOnboard(){
     {min:4,lv:"B1",tag:"Intermediário",start:"modulo10_aula1.html",mod:"Módulo 10"},
     {min:5,lv:"B2",tag:"Avançado",start:"modulo15_aula1.html",mod:"Módulo 15"}
   ];
-  let goal=null, score=0, qi=0;
+  let goal=null, score=0, qi=0, uname="";
   const ov=document.createElement("div"); ov.className="ob-ov"; document.body.appendChild(ov);
   const box=document.createElement("div"); box.className="ob-in ob"; ov.appendChild(box);
   const logo='<div class="ob-logo"><span class="d">💬</span>Falo</div>';
   function prog(n,tot){ let s='<div class="ob-prog">'; for(let i=0;i<tot;i++) s+='<i class="'+(i<n?'on':'')+'"></i>'; return s+'</div>'; }
   function welcome(){
     box.innerHTML=logo+'<div class="ob-big">👋</div><h2>Bem-vindo ao Falo!</h2><p class="sub">Você vai aprender inglês de verdade — do jeito que se fala no dia a dia, com áudio nativo e prática de conversa. Vamos montar sua trilha em 30 segundos.</p><button class="ob-cta" id="obGo">Começar</button>';
-    box.querySelector("#obGo").onclick=askGoal;
+    box.querySelector("#obGo").onclick=askName;
+  }
+  function askName(){
+    box.innerHTML=logo+prog(1,4)+'<h2>Como você quer ser chamado(a)?</h2><p class="sub">Pra deixar o Falo com a sua cara.</p><input id="obName" class="ob-input" type="text" maxlength="24" placeholder="Digite seu nome" autocomplete="given-name" autocapitalize="words"><button class="ob-cta" id="obNext" disabled>Continuar</button>';
+    const inp=box.querySelector("#obName"), btn=box.querySelector("#obNext");
+    inp.oninput=()=>{ uname=inp.value.trim(); btn.disabled=uname.length<1; };
+    inp.onkeydown=(e)=>{ if(e.key==="Enter"&&inp.value.trim().length>=1){ uname=inp.value.trim(); askGoal(); } };
+    btn.onclick=()=>{ uname=inp.value.trim(); askGoal(); };
+    setTimeout(()=>{try{inp.focus();}catch(e){}},60);
   }
   function askGoal(){
-    box.innerHTML=logo+prog(1,3)+'<h2>Qual é o seu objetivo?</h2><p class="sub">Assim eu personalizo sua experiência.</p>'+GOALS.map((g,i)=>'<button class="ob-opt" data-i="'+i+'"><span class="ob-emoji">'+g[0]+'</span>'+g[1]+'</button>').join('')+'<button class="ob-cta" id="obNext" disabled>Continuar</button>';
+    box.innerHTML=logo+prog(2,4)+'<h2>Qual é o seu objetivo?</h2><p class="sub">Assim eu personalizo sua experiência.</p>'+GOALS.map((g,i)=>'<button class="ob-opt" data-i="'+i+'"><span class="ob-emoji">'+g[0]+'</span>'+g[1]+'</button>').join('')+'<button class="ob-cta" id="obNext" disabled>Continuar</button>';
     box.querySelectorAll(".ob-opt").forEach(b=>b.onclick=()=>{ box.querySelectorAll(".ob-opt").forEach(x=>x.classList.remove("sel")); b.classList.add("sel"); goal=GOALS[+b.dataset.i][1]; box.querySelector("#obNext").disabled=false; });
     box.querySelector("#obNext").onclick=()=>{ qi=0; score=0; askQ(); };
   }
   function askQ(){
     const it=Q[qi];
-    box.innerHTML=logo+prog(2,3)+'<p class="sub" style="margin-bottom:6px">Teste rápido · '+(qi+1)+'/'+Q.length+'</p><h2>'+it.q+'</h2>'+it.o.map((o,i)=>'<button class="ob-opt" data-i="'+i+'">'+o+'</button>').join('');
+    box.innerHTML=logo+prog(3,4)+'<p class="sub" style="margin-bottom:6px">Teste rápido · '+(qi+1)+'/'+Q.length+'</p><h2>'+it.q+'</h2>'+it.o.map((o,i)=>'<button class="ob-opt" data-i="'+i+'">'+o+'</button>').join('');
     box.querySelectorAll(".ob-opt").forEach(b=>b.onclick=()=>{
       const i=+b.dataset.i; box.querySelectorAll(".ob-opt").forEach(x=>x.style.pointerEvents="none");
       if(i===it.a){ b.classList.add("ok"); score++; try{sfx("xp");}catch(e){} }
@@ -907,7 +919,7 @@ function startOnboard(){
     let r=LV[0]; for(const l of LV){ if(score>=l.min) r=l; }
     box.innerHTML=logo+'<div class="ob-big">🎯</div><h2>Seu nível: '+r.lv+' — '+r.tag+'</h2><p class="sub">Você acertou '+score+' de '+Q.length+'. Sua trilha vai começar no <b>'+r.mod+'</b>, no ponto ideal pra você evoluir sem enjoar nem se perder. Dá pra mudar quando quiser.</p><button class="ob-cta" id="obDone">Começar a aprender 🚀</button>';
     box.querySelector("#obDone").onclick=()=>{
-      ST.onboarded=true; ST.goal=goal; ST.level=r.lv; ST.start=r.start; save();
+      ST.onboarded=true; ST.name=uname; ST.goal=goal; ST.level=r.lv; ST.start=r.start; save();
       try{sfx("level");confetti(120);}catch(e){}
       ov.remove(); refresh();
     };
@@ -919,6 +931,7 @@ startOnboard();
 // ---- Etapa 4: Trilha visual (mapa de jornada) ----
 document.head.insertAdjacentHTML("beforeend","<style>"+
 "#trilhaView{position:fixed;inset:0;z-index:500;background:var(--ground);display:flex;flex-direction:column}"+
+"#trilhaView.hide,#perfilView.hide{display:none!important}"+
 ".tr-top{display:flex;align-items:center;gap:10px;padding:14px 18px;background:var(--surface);border-bottom:1px solid var(--line);box-shadow:var(--shadow-sm);position:relative;z-index:2}"+
 ".tr-top b{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:18px;color:var(--ink)}"+
 ".tr-top .trpct{margin-left:auto;font-size:12px;font-weight:800;color:var(--brand);background:var(--brand-soft);padding:4px 11px;border-radius:999px;white-space:nowrap}"+
@@ -983,11 +996,58 @@ function showTrilha(){ const tv=document.getElementById("trilhaView"); tv.classL
 function hideTrilha(){ document.getElementById("trilhaView").classList.add("hide"); document.getElementById("navTrail").classList.remove("on"); document.getElementById("navHome").classList.add("on"); }
 document.getElementById("navTrail").onclick=showTrilha;
 document.getElementById("trClose").onclick=hideTrilha;
-document.getElementById("navHome").onclick=()=>{ hideTrilha(); dev.scrollTo({top:0,behavior:"smooth"}); };
+document.getElementById("navHome").onclick=()=>{ hideTrilha(); try{hidePerfil();}catch(e){} dev.scrollTo({top:0,behavior:"smooth"}); };
 // pré-desenha a trilha JÁ no carregamento (escondida) — abrir vira só "mostrar", sem corrida de tempo
 try{ renderTrilha(); }catch(e){}
 window.addEventListener("load",()=>{ try{ renderTrilha(); }catch(e){} });
 window.addEventListener("pageshow",()=>{ try{ renderTrilha(); }catch(e){} });
+
+// ---- Perfil (cadastro/conta local) ----
+document.head.insertAdjacentHTML("beforeend","<style>"+
+"#perfilView{position:fixed;inset:0;z-index:500;background:var(--ground);display:flex;flex-direction:column}"+
+".pf-top{display:flex;align-items:center;gap:10px;padding:14px 18px;background:var(--surface);border-bottom:1px solid var(--line);box-shadow:var(--shadow-sm)}"+
+".pf-top b{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:18px;color:var(--ink)}"+
+".pf-top .x{margin-left:auto;background:var(--surface-2);border:0;width:34px;height:34px;border-radius:10px;font-size:15px;color:var(--ink);cursor:pointer}"+
+"#pfBody{flex:1;overflow-y:auto;overflow-x:hidden;padding:0 0 104px}"+
+".pf-col{max-width:440px;margin:0 auto;padding:24px 16px}"+
+".pf-hero{display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px}"+
+".pf-av{width:88px;height:88px;border-radius:50%;background:linear-gradient(135deg,var(--brand),#FF8A5B);color:#fff;display:grid;place-items:center;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:38px;box-shadow:0 12px 26px -12px var(--brand)}"+
+".pf-name{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:23px;color:var(--ink)}"+
+".pf-lvtag{background:var(--brand-soft);color:var(--brand-deep);font-weight:800;font-size:12.5px;padding:5px 12px;border-radius:999px}"+
+".pf-stats{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:22px}"+
+".pf-stat{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:15px;box-shadow:var(--shadow-sm)}"+
+".pf-stat .v{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:23px;color:var(--ink);line-height:1}"+
+".pf-stat .l{color:var(--ink-soft);font-weight:600;font-size:12.5px;margin-top:5px}"+
+".pf-sec{font-weight:800;font-size:12px;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.7px;margin:26px 0 12px}"+
+".pf-badges{display:grid;grid-template-columns:repeat(3,1fr);gap:11px}"+
+".pf-badge{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px 8px;text-align:center;box-shadow:var(--shadow-sm)}"+
+".pf-badge .e{font-size:30px}.pf-badge .n{font-size:11px;font-weight:700;color:var(--ink);margin-top:6px;line-height:1.2}"+
+".pf-badge.lock{opacity:.42;filter:grayscale(1)}"+
+".pf-act{display:flex;flex-direction:column;gap:10px;margin-top:26px}"+
+".pf-btn{display:flex;align-items:center;gap:10px;width:100%;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px;font-size:14.5px;font-weight:700;color:var(--ink);cursor:pointer;font-family:inherit;text-align:left}"+
+".pf-btn.danger{color:#D64524}"+
+".pf-note{margin-top:20px;background:var(--surface-2);border-radius:14px;padding:13px 15px;font-size:12.5px;color:var(--ink-soft);font-weight:600;line-height:1.45}"+
+"</style>");
+document.body.insertAdjacentHTML("beforeend",'<div id="perfilView" class="hide"><div class="pf-top"><b>👤 Perfil</b><button class="x" id="pfClose" aria-label="Fechar">✕</button></div><div id="pfBody"></div></div>');
+function renderPerfil(){
+  const host=document.getElementById("pfBody"); if(!host) return;
+  const nm=ST.name||"Aluno(a) Falo"; const ini=((ST.name||"F").trim().charAt(0)||"F").toUpperCase();
+  const totLessons=ALL.filter(x=>x[1].indexOf("modulo")===0).length; const done=ALL.filter(x=>x[1].indexOf("modulo")===0&&isDone(x[1])).length;
+  const pct=totLessons?Math.round(done/totLessons*100):0; const lv=Math.floor(ST.xp/100)+1;
+  const BADGES=[["🌱","Primeira aula",done>=1],["🔥","3 dias seguidos",(ST.streak||0)>=3],["⭐","100 XP",ST.xp>=100],["📚","10 aulas",done>=10],["🏅","Nível 5",lv>=5],["🎓","Metade do curso",done>=totLessons/2]];
+  let html='<div class="pf-col"><div class="pf-hero"><div class="pf-av">'+ini+'</div><div class="pf-name">'+nm+'</div><span class="pf-lvtag">🏆 Nível '+lv+(ST.level?" · "+ST.level:"")+'</span></div>';
+  html+='<div class="pf-stats"><div class="pf-stat"><div class="v">⭐ '+ST.xp+'</div><div class="l">XP total</div></div><div class="pf-stat"><div class="v">🔥 '+(ST.streak||0)+'</div><div class="l">Dias seguidos</div></div><div class="pf-stat"><div class="v">📘 '+done+'</div><div class="l">Aulas concluídas</div></div><div class="pf-stat"><div class="v">🎯 '+pct+'%</div><div class="l">do curso</div></div></div>';
+  html+='<div class="pf-sec">Conquistas</div><div class="pf-badges">'+BADGES.map(b=>'<div class="pf-badge'+(b[2]?"":" lock")+'"><div class="e">'+b[0]+'</div><div class="n">'+b[1]+'</div></div>').join("")+'</div>';
+  html+='<div class="pf-act"><button class="pf-btn" id="pfTheme">🌗 Alternar tema (claro / escuro)</button><button class="pf-btn danger" id="pfReset">🗑️ Zerar meu progresso</button></div>';
+  html+='<div class="pf-note">🔒 Login com e-mail e sincronização entre aparelhos (celular + computador) chega em breve. Por enquanto, seu progresso fica salvo neste aparelho.</div></div>';
+  host.innerHTML=html;
+  host.querySelector("#pfTheme").onclick=()=>{ const m=document.documentElement.getAttribute("data-theme")==="dark"?"light":"dark"; apply(m); try{localStorage.setItem("falo_theme",m);}catch(e){} };
+  host.querySelector("#pfReset").onclick=()=>{ if(confirm("Zerar todo o progresso? (seu nome é mantido)")){ const keep=ST.name; ST={done:{},xp:0,streak:0,last:"",day:{d:"",n:0},onboarded:true,name:keep}; save(); render(); try{renderTrilha();}catch(e){} renderPerfil(); } };
+}
+function showPerfil(){ renderPerfil(); document.getElementById("perfilView").classList.remove("hide"); document.getElementById("navProfile").classList.add("on"); document.getElementById("navHome").classList.remove("on"); }
+function hidePerfil(){ document.getElementById("perfilView").classList.add("hide"); document.getElementById("navProfile").classList.remove("on"); document.getElementById("navHome").classList.add("on"); }
+document.getElementById("pfClose").onclick=hidePerfil;
+document.getElementById("navProfile").onclick=showPerfil;
 
 // ---- Instalar como app (PWA) ----
 let deferredPrompt=null;
