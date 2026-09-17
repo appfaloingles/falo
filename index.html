@@ -919,43 +919,60 @@ startOnboard();
 // ---- Etapa 4: Trilha visual (mapa de jornada) ----
 document.head.insertAdjacentHTML("beforeend","<style>"+
 "#trilhaView{position:fixed;inset:0;z-index:500;background:var(--ground);display:flex;flex-direction:column}"+
-".tr-top{display:flex;align-items:center;gap:10px;padding:15px 18px;border-bottom:1px solid var(--line);background:var(--ground)}"+
+".tr-top{display:flex;align-items:center;gap:10px;padding:14px 18px;background:var(--surface);border-bottom:1px solid var(--line);box-shadow:var(--shadow-sm);position:relative;z-index:2}"+
 ".tr-top b{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:18px;color:var(--ink)}"+
-".tr-top .x{margin-left:auto;background:var(--surface-2);border:0;width:34px;height:34px;border-radius:10px;font-size:15px;color:var(--ink);cursor:pointer}"+
-"#trBody{flex:1;overflow:auto;padding:4px 0 94px}"+
-".tr-mod{padding:2px 0 6px}"+
-".tr-modhead{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 4px}"+
-".tr-modhead b{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:14px;color:var(--ink)}"+
-".tr-modhead span{font-size:12px;font-weight:700;color:var(--ink-soft);background:var(--surface-2);padding:3px 9px;border-radius:999px;white-space:nowrap;margin-left:10px}"+
-".tr-path{display:flex;flex-direction:column;align-items:center;gap:15px;padding:10px 0}"+
-".tr-node{transform:translateX(var(--off));width:58px;height:58px;border-radius:50%;display:grid;place-items:center;text-decoration:none;position:relative;box-shadow:var(--shadow-sm);transition:transform .12s}"+
-".tr-node:active{transform:translateX(var(--off)) scale(.92)}"+
-".tr-node .tr-ic{font-size:24px;line-height:1}"+
-".tr-node.done{background:var(--teal);color:#fff}.tr-node.done .tr-ic{font-size:23px;font-weight:800}"+
-".tr-node.now{background:var(--brand);color:#fff;animation:trpulse 1.7s ease-in-out infinite}"+
-".tr-node.lock{background:var(--surface);border:2px solid var(--line);opacity:.72}"+
-"@keyframes trpulse{0%,100%{box-shadow:0 0 0 5px var(--brand-soft),var(--shadow-sm)}50%{box-shadow:0 0 0 12px transparent,var(--shadow-sm)}}"+
-".tr-flag{position:absolute;top:-15px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--ground);font-size:9px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap;letter-spacing:.4px}"+
+".tr-top .trpct{margin-left:auto;font-size:12px;font-weight:800;color:var(--brand);background:var(--brand-soft);padding:4px 11px;border-radius:999px;white-space:nowrap}"+
+".tr-top .x{background:var(--surface-2);border:0;width:34px;height:34px;border-radius:10px;font-size:15px;color:var(--ink);cursor:pointer;flex:none}"+
+"#trBody{flex:1;overflow-y:auto;overflow-x:hidden;padding:0 0 104px}"+
+".tr-col{max-width:440px;margin:0 auto;padding:0 16px}"+
+".tr-unit{position:relative;overflow:hidden;border-radius:22px;margin:22px 0 4px;padding:17px 18px;background:var(--c);color:#fff;box-shadow:0 14px 26px -14px var(--c)}"+
+".tr-unit .eb{font-size:11px;font-weight:800;letter-spacing:.9px;text-transform:uppercase;opacity:.9}"+
+".tr-unit .ti{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:21px;line-height:1.1;margin-top:3px;max-width:80%}"+
+".tr-unit .pill{display:inline-block;margin-top:9px;background:rgba(255,255,255,.24);border-radius:999px;padding:4px 11px;font-size:11.5px;font-weight:800}"+
+".tr-unit .bigemo{position:absolute;right:4px;bottom:-14px;font-size:82px;opacity:.24;transform:rotate(-8deg);pointer-events:none}"+
+".tr-path{position:relative;display:flex;flex-direction:column;align-items:center;gap:9px;padding:24px 0 14px}"+
+".tr-step{display:flex;justify-content:center;width:100%}"+
+".tr-node{transform:translateX(var(--off));position:relative;text-decoration:none;transition:transform .12s}"+
+".tr-node .disc{width:66px;height:66px;border-radius:50%;display:grid;place-items:center;transition:box-shadow .12s}"+
+".tr-node .tr-ic{font-size:28px;line-height:1}"+
+".tr-node.done .disc{background:var(--teal);box-shadow:0 5px 0 var(--teal-ink)}"+
+".tr-node.done .tr-ic{color:#fff;font-weight:800;font-size:27px}"+
+".tr-node.now .disc{background:var(--brand);box-shadow:0 5px 0 var(--brand-deep)}"+
+".tr-node.lock .disc{background:var(--surface-2);box-shadow:0 5px 0 var(--line)}"+
+".tr-node.lock{opacity:.9}"+
+".tr-node:active{transform:translateX(var(--off)) translateY(4px)}"+
+".tr-node:active .disc{box-shadow:0 1px 0 var(--line)}"+
+".tr-node.now{animation:trbob 1.8s ease-in-out infinite}"+
+"@keyframes trbob{0%,100%{transform:translateX(var(--off)) translateY(0)}50%{transform:translateX(var(--off)) translateY(-6px)}}"+
+".tr-ring{position:absolute;inset:-6px;border-radius:50%;border:3px solid var(--brand);animation:trring 1.8s ease-out infinite;pointer-events:none}"+
+"@keyframes trring{0%{transform:scale(.92);opacity:.55}100%{transform:scale(1.4);opacity:0}}"+
+".tr-flag{position:absolute;top:-24px;left:50%;transform:translateX(-50%);background:#fff;color:var(--brand-deep);font-size:10px;font-weight:800;padding:4px 10px;border-radius:9px;white-space:nowrap;letter-spacing:.5px;box-shadow:var(--shadow-sm);z-index:3}"+
+".tr-flag::after{content:'';position:absolute;bottom:-3px;left:50%;transform:translateX(-50%) rotate(45deg);width:8px;height:8px;background:#fff}"+
 "</style>");
-document.body.insertAdjacentHTML("beforeend",'<div id="trilhaView" class="hide"><div class="tr-top"><b>🗺️ Sua trilha</b><button class="x" id="trClose" aria-label="Fechar">✕</button></div><div id="trBody"></div></div>');
+document.body.insertAdjacentHTML("beforeend",'<div id="trilhaView" class="hide"><div class="tr-top"><b>🗺️ Sua trilha</b><span class="trpct" id="trPct"></span><button class="x" id="trClose" aria-label="Fechar">✕</button></div><div id="trBody"></div></div>');
 const TRKEYS=["m1","m2","m3","m4","m5","m6","m7","m8","m9","m10","m11","m12","m13","m14","m15","m16","m17","m18","m19","m20"];
 function curFileTr(){ let cur=ALL.find(x=>!isDone(x[1])&&x[1].indexOf("modulo")===0); if(doneCount()===0&&ST.start){ const s=ALL.find(x=>x[1]===ST.start); if(s) cur=s; } return cur?cur[1]:null; }
 function renderTrilha(){
   const host=document.getElementById("trBody"); if(!host) return;
-  const offs=[0,44,0,-44]; const cf=curFileTr(); let html="";
-  TRKEYS.forEach(k=>{ const arr=GROUPS[k]; if(!arr) return;
+  const UC=["#FF5630","#0FB39B","#7A5CFF","#F5A623","#2D9CDB","#EB5A9E"];
+  const cf=curFileTr(); let html='<div class="tr-col">'; let tot=0,dtot=0;
+  TRKEYS.forEach((k,mi)=>{ const arr=GROUPS[k]; if(!arr) return;
     const head=(document.querySelector("#pane_"+k+" .sect")||{}).textContent||k;
-    const dn=arr.filter(x=>isDone(x[1])).length;
-    html+='<div class="tr-mod"><div class="tr-modhead"><b>'+head+'</b><span>'+dn+'/'+arr.length+'</span></div><div class="tr-path">';
+    const name=(head.split("·").slice(1).join("·").trim()||head).replace(/\s*\([^)]*\)\s*$/,"").trim();
+    const dn=arr.filter(x=>isDone(x[1])).length; tot+=arr.length; dtot+=dn;
+    const n=mi+1, lv=n<=4?"A1":n<=9?"A2":n<=14?"B1":n<=18?"B2":"B2+";
+    const c=UC[mi%UC.length], bigemo=(arr[0]&&arr[0][2])||"📘";
+    html+='<div class="tr-unit" style="--c:'+c+'"><div class="eb">Unidade '+n+' · '+lv+'</div><div class="ti">'+name+'</div><div class="pill">'+dn+'/'+arr.length+' aulas</div><span class="bigemo">'+bigemo+'</span></div><div class="tr-path">';
     arr.forEach((it,i)=>{ const file=it[1], done=isDone(file), now=(file===cf);
-      const cls=done?'done':(now?'now':'lock');
-      html+='<a class="tr-node '+cls+'" href="'+file+'" data-file="'+file+'" style="--off:'+offs[i%4]+'px" title="'+it[3]+'"><span class="tr-ic">'+(done?'✓':it[2])+'</span>'+(now?'<span class="tr-flag">COMECE</span>':'')+'</a>';
+      const cls=done?'done':(now?'now':'lock'); const off=Math.round(Math.sin(i*0.55)*54);
+      html+='<div class="tr-step"><a class="tr-node '+cls+'" href="'+file+'" data-file="'+file+'" style="--off:'+off+'px" title="'+it[3]+'">'+(now?'<span class="tr-flag">COMECE</span><span class="tr-ring"></span>':'')+'<span class="disc"><span class="tr-ic">'+(done?'✓':it[2])+'</span></span></a></div>';
     });
-    html+='</div></div>';
+    html+='</div>';
   });
-  host.innerHTML=html;
+  html+='</div>'; host.innerHTML=html;
+  const pct=document.getElementById("trPct"); if(pct) pct.textContent=(tot?Math.round(dtot/tot*100):0)+"% do curso";
   host.querySelectorAll(".tr-node").forEach(a=>a.addEventListener("click",()=>markDone(a.dataset.file,true)));
-  const cn=host.querySelector(".tr-node.now"); if(cn) setTimeout(()=>{try{cn.scrollIntoView({block:"center"});}catch(e){}},60);
+  const cn=host.querySelector(".tr-node.now"); if(cn) setTimeout(()=>{try{cn.scrollIntoView({block:"center"});}catch(e){}},70);
 }
 function showTrilha(){ const tv=document.getElementById("trilhaView"); tv.classList.remove("hide"); document.getElementById("navTrail").classList.add("on"); document.getElementById("navHome").classList.remove("on"); renderTrilha();
   // rede de segurança: se por qualquer corrida de tempo não desenhou, redesenha
