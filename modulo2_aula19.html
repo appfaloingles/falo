@@ -472,3 +472,58 @@ var fDone=false,fDeck=false;
 function scan(s){if(!s||s.length>200)return;if(!fDone&&/conclu[ií]da/i.test(s)){fDone=true;sfx('win');hap([0,40,50,40,50,90]);conf(150);}else if(!fDeck&&/Baralho zerado/i.test(s)){fDeck=true;sfx('win');hap([0,30,40,60]);conf(90);}}
 try{var mo=new MutationObserver(function(m){for(var i=0;i<m.length;i++){var x=m[i];if(x.type==='characterData'){scan(x.target&&x.target.data);}else if(x.target){scan(x.target.textContent);}}});mo.observe(document.body,{childList:true,subtree:true,characterData:true});}catch(e){}
 }catch(e){}})();</script>
+<script>/*falo-speak*/(function(){if(window.__faloSpeak)return;window.__faloSpeak=1;try{
+document.head.insertAdjacentHTML("beforeend","<style>"+
+".sprax{background:var(--card-2);border:1px solid var(--line);border-radius:16px;padding:16px;margin-top:16px}"+
+".sprax-h{font-weight:800;font-size:15px;color:var(--ink)}"+
+".sprax-tg{font-size:12.5px;color:var(--ink-soft,#8a7a75);font-weight:600;margin-top:2px}"+
+".sprax-phrase{font-size:17px;font-weight:800;color:var(--coral,#FF5630);margin:8px 0 12px;line-height:1.3}"+
+".sprax-row{display:flex;gap:9px;align-items:center}"+
+".sprax-in{flex:1;background:var(--card);border:2px solid var(--line);border-radius:12px;padding:12px 13px;font-size:15px;color:var(--ink);font-family:inherit;outline:none;min-width:0}"+
+".sprax-in:focus{border-color:var(--coral,#FF5630)}"+
+".sprax-mic{flex:none;width:52px;height:52px;border-radius:14px;border:none;background:var(--coral,#FF5630);color:#fff;font-size:24px;cursor:pointer;display:grid;place-items:center;transition:transform .12s}"+
+".sprax-mic:active{transform:scale(.92)}"+
+".sprax-mic.rec{animation:spraxpulse 1.1s infinite}"+
+"@keyframes spraxpulse{0%{box-shadow:0 0 0 0 rgba(255,86,48,.5)}100%{box-shadow:0 0 0 16px transparent}}"+
+".sprax-fb{font-size:13.5px;font-weight:700;margin-top:10px;min-height:18px;line-height:1.35}"+
+".sprax-fb.ok{color:var(--teal,#0FB39B)}.sprax-fb.no{color:var(--coral,#FF5630)}"+
+".sprax-next{margin-top:12px;background:transparent;border:1px solid var(--line);color:var(--ink-soft,#8a7a75);border-radius:10px;padding:8px 13px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit}"+
+"</style>");
+function init(){
+  var game=document.querySelector(".card.game"); if(!game||game.querySelector(".sprax")) return;
+  var steps=game.querySelector(".steps");
+  var phrases=[].slice.call(document.querySelectorAll(".en")).map(function(e){return e.textContent.replace(/^[“”‘’"'\s]+|[“”‘’"'\s]+$/g,"").trim();}).filter(function(p){return p && /[a-zA-Z]/.test(p) && p.length>=2 && p.length<=64;});
+  phrases=phrases.filter(function(p,idx){return phrases.indexOf(p)===idx;});
+  phrases.sort(function(a,b){return (b.indexOf(" ")>=0?1:0)-(a.indexOf(" ")>=0?1:0);});
+  if(!phrases.length) return;
+  var i=0;
+  var box=document.createElement("div"); box.className="sprax";
+  box.innerHTML='<div class="sprax-h">🎤 Sua vez de falar</div><div class="sprax-tg">Toque no microfone e fale (ou escreva) a frase:</div><div class="sprax-phrase"></div><div class="sprax-row"><input class="sprax-in" type="text" placeholder="Fale no microfone ou digite aqui…" autocomplete="off" autocapitalize="off"><button class="sprax-mic" type="button" aria-label="Falar">🎤</button></div><div class="sprax-fb"></div><button class="sprax-next" type="button">🔀 Outra frase</button>';
+  (steps||game).insertAdjacentElement("afterend", box);
+  var pEl=box.querySelector(".sprax-phrase"), input=box.querySelector(".sprax-in"), mic=box.querySelector(".sprax-mic"), fb=box.querySelector(".sprax-fb"), next=box.querySelector(".sprax-next");
+  function show(){ pEl.textContent="“"+phrases[i]+"”"; input.value=""; fb.textContent=""; fb.className="sprax-fb"; }
+  show();
+  next.onclick=function(){ i=(i+1)%phrases.length; show(); };
+  function norm(s){ return (s||"").toLowerCase().replace(/[^a-z0-9\s]/g,"").replace(/\s+/g," ").trim(); }
+  function hap(p){ try{ if(navigator.vibrate) navigator.vibrate(p); }catch(e){} }
+  function check(said){ said=(said||"").trim(); input.value=said; if(!said){ return; }
+    if(norm(said)===norm(phrases[i])){ fb.textContent="✅ Perfeito! Você falou certinho."; fb.className="sprax-fb ok"; hap([0,30,40,60]); }
+    else { fb.textContent="🔁 Ouvi: “"+said+"”. Quase! Toque e tente de novo."; fb.className="sprax-fb no"; hap(20); }
+  }
+  input.onkeydown=function(e){ if(e.key==="Enter"){ check(input.value); } };
+  var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){ mic.style.opacity=".5"; mic.title="Seu navegador não reconhece voz — digite a frase"; mic.onclick=function(){ fb.textContent="Seu navegador não reconhece voz. Use o Chrome no Android/PC, ou digite a frase."; fb.className="sprax-fb no"; }; return; }
+  var rec=null, listening=false;
+  mic.onclick=function(){
+    if(listening){ try{rec.stop();}catch(e){} return; }
+    try{ rec=new SR(); }catch(e){ return; }
+    rec.lang="en-US"; rec.interimResults=true; rec.maxAlternatives=1; var finalT="";
+    rec.onstart=function(){ listening=true; mic.classList.add("rec"); fb.textContent="🎙️ Ouvindo… fale agora"; fb.className="sprax-fb"; };
+    rec.onresult=function(e){ var interim="",fin=""; for(var k=0;k<e.results.length;k++){ var t=e.results[k][0].transcript; if(e.results[k].isFinal) fin+=t; else interim+=t; } finalT=fin; input.value=(fin||interim); };
+    rec.onerror=function(e){ listening=false; mic.classList.remove("rec"); fb.textContent="⚠️ Não consegui ouvir ("+(e.error||"")+"). Permita o microfone e tente de novo."; fb.className="sprax-fb no"; };
+    rec.onend=function(){ listening=false; mic.classList.remove("rec"); var v=(finalT||input.value).trim(); if(v) check(v); };
+    try{ rec.start(); }catch(e){}
+  };
+}
+if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",init); else init();
+}catch(e){}})();</script>
