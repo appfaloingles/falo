@@ -567,7 +567,12 @@ function init(){
     rec.onend=function(){listening=false;sM.classList.remove("rec");sH.textContent="Toque para falar";sCheck((lastText||"").trim());};
     try{rec.start();}catch(e){}
   }
-  sM.onclick=function(){ if(listening){try{rec.stop();}catch(e){} return;} sH.textContent="Preparando…"; ensureMic().then(function(ok){ if(!ok){sF.textContent="⚠️ Ative o microfone: toque de novo e escolha “Permitir”.";sF.className="prx-fb no";sH.textContent="Toque para falar";return;} startRec(); }); };
+  var isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent||"");
+  function help(){ var m; if(isIOS){ m="No iPhone, o microfone funciona no <b>Safari</b> (o app instalado bloqueia). Abra pelo Safari, ou use o campo de <b>escrita</b> acima."; } else { m="Toque nos <b>3 pontinhos (⋮)</b> do navegador → <b>Configurações do site</b> → <b>Microfone</b> → <b>Permitir</b>. (Ou desinstale e reinstale o app e escolha <b>Permitir</b>.)"; } sF.innerHTML="⚠️ Microfone bloqueado. "+m; sF.className="prx-fb no"; sH.textContent="Toque para falar"; }
+  sM.onclick=function(){ if(listening){try{rec.stop();}catch(e){}return;} sH.textContent="Preparando…"; sF.textContent=""; sF.className="prx-fb";
+    var go=function(){ ensureMic().then(function(ok){ if(ok){startRec();} else {help();} }); };
+    try{ if(navigator.permissions&&navigator.permissions.query){ navigator.permissions.query({name:"microphone"}).then(function(st){ if(st.state==="denied"){help();} else {go();} }).catch(go); } else { go(); } }catch(e){ go(); }
+  };
 }
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init);else init();
 }catch(e){}})();</script>
