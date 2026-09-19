@@ -520,7 +520,9 @@ document.head.insertAdjacentHTML("beforeend","<style>"+
 ".prx-mic.cancel{background:#8a8a8a}"+
 "@keyframes prxpulse{0%{box-shadow:0 0 0 0 rgba(255,86,48,.55)}100%{box-shadow:0 0 0 24px transparent}}"+
 ".prx-mich{font-size:12px;color:var(--ink-soft,#8a7a75);font-weight:700;text-align:center}"+
-".prx-heard{font-size:15px;font-weight:700;color:var(--ink);min-height:20px;text-align:center;margin-top:4px}"+
+".prx-live{background:var(--card);border:2px dashed var(--line);border-radius:12px;padding:13px;min-height:48px;font-size:16px;font-weight:800;color:var(--ink);text-align:center;margin-top:8px;display:flex;align-items:center;justify-content:center;line-height:1.3}"+
+".prx-live.empty{color:var(--ink-soft,#8a7a75);font-weight:600;font-size:13px}"+
+".prx-live.on{border-style:solid;border-color:var(--coral,#FF5630)}"+
 ".prx-fb{font-size:13.5px;font-weight:700;margin-top:9px;min-height:18px;line-height:1.35;text-align:center}"+
 ".prx-fb.ok{color:var(--teal,#0FB39B)}.prx-fb.no{color:var(--coral,#FF5630)}"+
 ".prx-next{margin-top:12px;background:transparent;border:1px solid var(--line);color:var(--ink-soft,#8a7a75);border-radius:10px;padding:8px 13px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit;display:block}"+
@@ -537,7 +539,7 @@ function init(){
   var kicker=game.querySelector(".kicker"); game.innerHTML=""; if(kicker) game.appendChild(kicker);
   game.insertAdjacentHTML("beforeend",'<h2>Pratique escrita e fala 🎯</h2><p class="lead">Escreva em inglês e depois fale a frase — do jeito que se usa de verdade.</p>'+
   '<div class="prx prx-write"><div class="prx-h">✍️ Treino de escrita</div><div class="prx-sub">Escreva em inglês:</div><div class="prx-target" id="wT"></div><div class="prx-row"><input class="prx-in" id="wI" placeholder="Digite em inglês…" autocomplete="off" autocapitalize="off" autocorrect="off"><button class="prx-check" id="wC">Ver</button></div><div class="prx-fb" id="wF"></div><button class="prx-next" id="wN">🔀 Outra frase</button></div>'+
-  '<div class="prx prx-speak"><div class="prx-h">🎤 Treino de fala</div><div class="prx-sub">Segure o microfone e fale a frase:</div><div class="prx-target" id="sT"></div><div class="prx-micwrap"><button class="prx-mic" id="sM" type="button">🎤</button><span class="prx-mich" id="sH">Segure para falar</span></div><div class="prx-heard" id="sHe"></div><div class="prx-fb" id="sF"></div><button class="prx-next" id="sN">🔀 Outra frase</button></div>');
+  '<div class="prx prx-speak"><div class="prx-h">🎤 Treino de fala</div><div class="prx-sub">Toque no microfone e fale a frase:</div><div class="prx-target" id="sT"></div><div class="prx-micwrap"><button class="prx-mic" id="sM" type="button">🎤</button><span class="prx-mich" id="sH">Toque para falar</span></div><div class="prx-live empty" id="sLive">O que você falar aparece aqui…</div><div class="prx-fb" id="sF"></div><button class="prx-next" id="sN">🔀 Outra frase</button></div>');
   // move a pratica pro fim da aula (depois do Smart Review, antes do "Concluir aula")
   try{var _cta=document.getElementById("cta")||document.querySelector(".cta");if(_cta&&_cta.parentNode){_cta.parentNode.insertBefore(game,_cta);}}catch(e){}
   function norm(s){return (s||"").toLowerCase().replace(/[^a-z0-9\s]/g,"").replace(/\s+/g," ").trim();}
@@ -548,28 +550,24 @@ function init(){
   function wShow(){wT.textContent="“"+pairs[wi].pt+"”";wI.value="";wF.textContent="";wF.className="prx-fb";}
   function wDo(){var v=wI.value.trim();if(!v)return;if(norm(v)===norm(pairs[wi].en)){wF.textContent="✅ Perfeito! “"+pairs[wi].en+"”";wF.className="prx-fb ok";hap([0,30,40,60]);}else{wF.textContent="❌ Quase! O certo é: “"+pairs[wi].en+"”";wF.className="prx-fb no";hap(20);}}
   wC.onclick=wDo; wI.onkeydown=function(e){if(e.key==="Enter")wDo();}; wN.onclick=function(){wi=(wi+1)%pairs.length;wShow();}; wShow();
-  // FALA
-  var si=0,sT=g.querySelector("#sT"),sM=g.querySelector("#sM"),sH=g.querySelector("#sH"),sHe=g.querySelector("#sHe"),sF=g.querySelector("#sF"),sN=g.querySelector("#sN");
-  function sShow(){sT.textContent="“"+pairs[si].en+"”";sHe.textContent="";sF.textContent="";sF.className="prx-fb";sH.textContent="Segure para falar";}
+  // FALA (toque pra falar, para sozinho no silencio; permissao via pop-up in-app)
+  var si=0,sT=g.querySelector("#sT"),sM=g.querySelector("#sM"),sH=g.querySelector("#sH"),sLive=g.querySelector("#sLive"),sF=g.querySelector("#sF"),sN=g.querySelector("#sN");
+  function liveSet(txt,cls){sLive.textContent=txt;sLive.className="prx-live"+(cls?(" "+cls):"");}
+  function sShow(){sT.textContent="“"+pairs[si].en+"”";liveSet("O que você falar aparece aqui…","empty");sF.textContent="";sF.className="prx-fb";sH.textContent="Toque para falar";sM.classList.remove("rec");}
   sN.onclick=function(){si=(si+1)%pairs.length;sShow();}; sShow();
-  function sCheck(said){said=(said||"").trim();if(!said){sF.textContent="🔇 Não ouvi nada. Segure o botão e fale perto do microfone.";sF.className="prx-fb no";return;}sHe.textContent="Você disse: “"+said+"”";if(norm(said)===norm(pairs[si].en)){sF.textContent="✅ Isso! Você falou certinho.";sF.className="prx-fb ok";hap([0,30,40,60]);}else{sF.textContent="🔁 Ficou perto! Toque e tente de novo.";sF.className="prx-fb no";hap(20);}}
+  function sCheck(said){said=(said||"").trim();if(!said){sF.textContent="🔇 Não ouvi nada. Toque e fale a frase.";sF.className="prx-fb no";liveSet("O que você falar aparece aqui…","empty");return;}liveSet(said);if(norm(said)===norm(pairs[si].en)){sF.textContent="✅ Isso! Você falou certinho.";sF.className="prx-fb ok";hap([0,30,40,60]);}else{sF.textContent="🔁 Ficou perto! Toque e tente de novo.";sF.className="prx-fb no";hap(20);}}
   var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
   if(!SR){sM.style.opacity=".5";sH.textContent="Voz não suportada aqui";sM.onclick=function(){sF.textContent="Reconhecimento de voz não funciona neste navegador. Use o Chrome (Android/computador).";sF.className="prx-fb no";};return;}
-  var rec=null,holding=false,cancel=false,startY=0,lastText="";
-  function begin(y){if(holding)return;cancel=false;startY=y;lastText="";
-    try{rec=new SR();}catch(e){return;}
-    rec.lang="en-US";rec.interimResults=true;rec.continuous=true;rec.maxAlternatives=1;
-    rec.onstart=function(){holding=true;sM.classList.add("rec");sH.textContent="Ouvindo… solte para enviar";sHe.textContent="";sF.textContent="";sF.className="prx-fb";};
-    rec.onresult=function(e){var it="",fin="";for(var k=0;k<e.results.length;k++){var t=e.results[k][0].transcript;if(e.results[k].isFinal)fin+=t;else it+=t;}lastText=(fin||it);sHe.textContent=lastText?("Você disse: “"+lastText+"”"):"";};
-    rec.onerror=function(ev){holding=false;sM.classList.remove("rec");sM.classList.remove("cancel");sH.textContent="Segure para falar";if(ev.error==="not-allowed"||ev.error==="service-not-allowed"){sF.textContent="⚠️ Permita o microfone pro site (cadeado na barra) e tente de novo.";sF.className="prx-fb no";}else if(ev.error==="no-speech"){sF.textContent="🔇 Não ouvi nada. Segure e fale mais perto.";sF.className="prx-fb no";}};
-    rec.onend=function(){holding=false;sM.classList.remove("rec");sM.classList.remove("cancel");sH.textContent="Segure para falar";if(!cancel)sCheck((lastText||"").trim());};
+  var rec=null,listening=false,micOK=false,lastText="";
+  function ensureMic(){return new Promise(function(res){ if(micOK){res(true);return;} if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){res(true);return;} navigator.mediaDevices.getUserMedia({audio:true}).then(function(st){try{st.getTracks().forEach(function(t){t.stop();});}catch(e){} micOK=true; res(true);}).catch(function(){res(false);}); });}
+  function startRec(){ try{rec=new SR();}catch(e){return;} rec.lang="en-US";rec.interimResults=true;rec.continuous=false;rec.maxAlternatives=1;lastText="";
+    rec.onstart=function(){listening=true;sM.classList.add("rec");sH.textContent="🎙️ Fale agora…";liveSet("…","on");sF.textContent="";sF.className="prx-fb";};
+    rec.onresult=function(e){var it="",fin="";for(var k=0;k<e.results.length;k++){var t=e.results[k][0].transcript;if(e.results[k].isFinal)fin+=t;else it+=t;}lastText=(fin||it);liveSet(lastText||"…","on");};
+    rec.onerror=function(ev){listening=false;sM.classList.remove("rec");sH.textContent="Toque para falar";if(ev.error==="not-allowed"||ev.error==="service-not-allowed"){micOK=false;sF.textContent="⚠️ Toque no microfone de novo e escolha “Permitir”.";sF.className="prx-fb no";}else if(ev.error==="no-speech"){sF.textContent="🔇 Não ouvi nada. Toque e fale a frase.";sF.className="prx-fb no";liveSet("O que você falar aparece aqui…","empty");}};
+    rec.onend=function(){listening=false;sM.classList.remove("rec");sH.textContent="Toque para falar";sCheck((lastText||"").trim());};
     try{rec.start();}catch(e){}
   }
-  function end(){try{if(rec)rec.stop();}catch(e){}}
-  sM.addEventListener("pointerdown",function(e){e.preventDefault();try{sM.setPointerCapture(e.pointerId);}catch(x){}begin(e.clientY);});
-  sM.addEventListener("pointermove",function(e){if(!holding)return;if(startY-e.clientY>60){cancel=true;sM.classList.add("cancel");sH.textContent="Solte para CANCELAR ⬆️";}else{cancel=false;sM.classList.remove("cancel");sH.textContent="Ouvindo… solte para enviar";}});
-  sM.addEventListener("pointerup",function(e){e.preventDefault();end();});
-  sM.addEventListener("pointercancel",function(){cancel=true;end();});
+  sM.onclick=function(){ if(listening){try{rec.stop();}catch(e){} return;} sH.textContent="Preparando…"; ensureMic().then(function(ok){ if(!ok){sF.textContent="⚠️ Ative o microfone: toque de novo e escolha “Permitir”.";sF.className="prx-fb no";sH.textContent="Toque para falar";return;} startRec(); }); };
 }
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init);else init();
 }catch(e){}})();</script>
