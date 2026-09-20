@@ -1,0 +1,663 @@
+<meta charset="utf-8">
+<title>Falo · Verbos Aula 20</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:ital,wght@0,400;0,600;0,700;0,800;1,400&display=swap">
+<style>
+  :root{
+    --ground:#F5F6FB; --card:#FFFFFF; --card-2:#EEF0FA;
+    --ink:#1C2140; --ink-soft:#565C86; --line:#E1E4F2;
+    --coral:#FF6B5E; --coral-deep:#E9503F;
+    --teal:#0FB39B; --teal-soft:#DFF6F1;
+    --gold:#F5B23E; --gold-soft:#FCEED0;
+    --indigo:#5B63E0; --indigo-soft:#E7E9FD;
+    --shadow:0 10px 30px -12px rgba(28,33,64,.28);
+    --shadow-sm:0 4px 14px -8px rgba(28,33,64,.35);
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --ground:#0F1226; --card:#1A1E3C; --card-2:#232748;
+      --ink:#EDEEF9; --ink-soft:#A6ABD6; --line:#2C315C;
+      --coral:#FF7C70; --coral-deep:#FF6B5E; --teal:#2CD1B6; --teal-soft:#173B39;
+      --gold:#FFC663; --gold-soft:#3A2F16; --indigo:#8C93FF; --indigo-soft:#20244B;
+      --shadow:0 14px 34px -14px rgba(0,0,0,.6); --shadow-sm:0 6px 16px -10px rgba(0,0,0,.7);
+    }
+  }
+  :root[data-theme="dark"]{
+    --ground:#0F1226; --card:#1A1E3C; --card-2:#232748;
+    --ink:#EDEEF9; --ink-soft:#A6ABD6; --line:#2C315C;
+    --coral:#FF7C70; --coral-deep:#FF6B5E; --teal:#2CD1B6; --teal-soft:#173B39;
+    --gold:#FFC663; --gold-soft:#3A2F16; --indigo:#8C93FF; --indigo-soft:#20244B;
+    --shadow:0 14px 34px -14px rgba(0,0,0,.6); --shadow-sm:0 6px 16px -10px rgba(0,0,0,.7);
+  }
+  *{box-sizing:border-box}
+  body{margin:0; background:var(--ground); color:var(--ink); font-family:"Nunito",system-ui,sans-serif; line-height:1.55; -webkit-font-smoothing:antialiased}
+  .wrap{max-width:760px; margin:0 auto; padding:0 18px 90px}
+  h1,h2,h3{font-family:"Baloo 2",system-ui,sans-serif; line-height:1.15; margin:0}
+  .top{position:sticky; top:0; z-index:20; background:color-mix(in srgb,var(--ground) 86%, transparent); backdrop-filter:blur(10px); border-bottom:1px solid var(--line)}
+  .top .row{max-width:760px; margin:0 auto; padding:12px 18px; display:flex; align-items:center; gap:14px}
+  .logo{font-family:"Baloo 2"; font-weight:800; font-size:20px; letter-spacing:-.3px; display:flex; align-items:center; gap:8px}
+  .logo .dot{width:12px;height:12px;border-radius:50%;background:var(--coral);box-shadow:0 0 0 4px color-mix(in srgb,var(--coral) 22%,transparent)}
+  .stat{margin-left:auto; display:flex; gap:8px; align-items:center; font-weight:800; font-size:15px}
+  .chip{display:inline-flex; align-items:center; gap:6px; padding:5px 11px; border-radius:999px; font-size:14px; font-weight:800}
+  .chip.fire{background:var(--gold-soft); color:var(--gold)}
+  .chip.xp{background:var(--indigo-soft); color:var(--indigo)}
+  .progress{height:8px; background:var(--card-2)}
+  .progress > i{display:block; height:100%; width:5%; background:linear-gradient(90deg,var(--coral),var(--gold)); border-radius:0 6px 6px 0; transition:width .5s cubic-bezier(.2,.8,.2,1)}
+  .themeBtn{appearance:none;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;width:36px;height:36px;cursor:pointer;font-size:16px;flex:none}
+  .voicebar{max-width:760px;margin:0 auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 18px;font-size:13.5px;font-weight:700;color:var(--ink-soft)}
+  .voicebar select{font-family:"Nunito",sans-serif;font-weight:700;font-size:13.5px;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:10px;padding:7px 10px;max-width:min(58vw,320px);cursor:pointer}
+  .voicebar .lab{display:flex;align-items:center;gap:6px}
+  .vtip{width:100%;font-size:12.5px;font-weight:700;color:var(--coral-deep);display:none}
+  .vtip.show{display:block}
+  .vgood{color:var(--teal)}
+  .hero{padding:30px 0 8px}
+  .eyebrow{font-weight:800; letter-spacing:.14em; text-transform:uppercase; font-size:12.5px; color:var(--coral)}
+  .hero h1{font-size:clamp(28px,7vw,44px); font-weight:800; margin:8px 0 6px; text-wrap:balance}
+  .hero p{color:var(--ink-soft); font-size:17px; max-width:54ch; margin:0}
+  .goals{display:flex; flex-wrap:wrap; gap:8px; margin-top:16px}
+  .goal{display:flex; align-items:center; gap:7px; background:var(--card); border:1px solid var(--line); padding:7px 12px; border-radius:12px; font-weight:700; font-size:13.5px; box-shadow:var(--shadow-sm)}
+  .card{background:var(--card); border:1px solid var(--line); border-radius:20px; padding:22px; margin-top:22px; box-shadow:var(--shadow)}
+  .kicker{display:flex; align-items:center; gap:10px; margin-bottom:4px}
+  .kicker .n{width:30px;height:30px;border-radius:9px;background:var(--coral);color:#fff;font-family:"Baloo 2";font-weight:800;display:grid;place-items:center;font-size:16px;flex:none}
+  .kicker .tag{font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft)}
+  .card h2{font-size:23px; font-weight:700; margin:2px 0 4px}
+  .lead{color:var(--ink-soft); margin:0 0 8px}
+  .note{margin-top:16px; display:flex; gap:12px; align-items:flex-start; background:var(--teal-soft); border:1px solid color-mix(in srgb,var(--teal) 30%,var(--line)); border-radius:14px; padding:13px 15px}
+  .note .em{font-size:22px; flex:none} .note b{color:var(--teal)} .note p{margin:0; font-size:14px; color:var(--ink)}
+  .note.warn{background:var(--gold-soft); border-color:color-mix(in srgb,var(--gold) 40%,var(--line))} .note.warn b{color:var(--coral-deep)}
+  /* Armadilha do brasileiro */
+  .trapcard{border:2px solid color-mix(in srgb,var(--coral) 45%,var(--line)); background:color-mix(in srgb,var(--coral) 6%,var(--card))}
+  .trapcard .kicker .n{background:var(--coral-deep)}
+  .traps{display:grid; gap:10px; margin-top:14px}
+  .trap{background:var(--card-2); border:1px solid var(--line); border-radius:14px; padding:12px 14px; cursor:pointer; transition:transform .12s, box-shadow .12s}
+  .trap:hover{transform:translateY(-2px); box-shadow:var(--shadow-sm)}
+  .trap .bad{color:var(--coral-deep); font-weight:800; text-decoration:line-through; text-decoration-thickness:2px; font-size:15px}
+  .trap .good{color:var(--teal); font-weight:800; font-size:16px; font-family:"Baloo 2"}
+  .trap .arrow{color:var(--ink-soft); font-weight:800; margin:0 6px}
+  .trap .why{display:block; font-size:12.5px; color:var(--ink-soft); font-weight:700; margin-top:3px}
+  /* conjugacao TO BE */
+  .conj{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:14px}
+  .cj{display:flex; align-items:center; gap:12px; background:var(--card-2); border:1px solid var(--line); border-radius:14px; padding:11px 13px; cursor:pointer; transition:transform .12s, box-shadow .12s}
+  .cj:hover{transform:translateY(-3px); box-shadow:var(--shadow-sm)} .cj:active{transform:scale(.97)}
+  .cj .emoji{width:38px;height:38px;border-radius:50%;flex:none;display:grid;place-items:center;font-size:20px;background:var(--card);box-shadow:inset 0 0 0 1px var(--line)}
+  .cj .en{font-family:"Baloo 2"; font-weight:800; font-size:18px; line-height:1.1}
+  .cj .en b{color:var(--indigo)}
+  .cj .pt{font-size:12.5px; color:var(--ink-soft); font-weight:700}
+  /* contractions */
+  .poss{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:14px}
+  .pcard{display:flex; align-items:center; gap:10px; background:var(--card-2); border:1px solid var(--line); border-radius:13px; padding:11px 13px; cursor:pointer; transition:transform .12s, box-shadow .12s}
+  .pcard:hover{transform:translateY(-2px); box-shadow:var(--shadow-sm)}
+  .pcard .ic{font-size:20px}
+  .pcard .w{font-family:"Baloo 2"; font-weight:800; font-size:19px; color:var(--indigo)}
+  .pcard .m{font-size:12.5px; color:var(--ink-soft); font-weight:700}
+  .greets{display:grid; gap:12px; margin-top:14px}
+  .greet{display:flex; align-items:center; gap:14px; background:var(--card-2); border:1px solid var(--line); border-radius:16px; padding:14px 16px; cursor:pointer; transition:transform .12s, box-shadow .12s}
+  .greet:hover{transform:translateX(4px); box-shadow:var(--shadow-sm)}
+  .greet .mini{width:44px;height:44px;border-radius:12px;flex:none;background:var(--indigo);color:#fff;display:grid;place-items:center;font-size:20px}
+  .greet .en{font-family:"Baloo 2"; font-weight:800; font-size:18px}
+  .greet .ipa2{font-size:13px; color:var(--ink-soft); font-weight:700; font-style:italic}
+  .greet .pt{margin-left:auto; text-align:right; font-weight:800; color:var(--coral); font-size:14.5px}
+  .exq{display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-top:6px}
+  .speaker{appearance:none; border:none; cursor:pointer; width:60px; height:60px; border-radius:16px; flex:none; background:var(--indigo); color:#fff; font-size:26px; display:grid; place-items:center; box-shadow:var(--shadow-sm); transition:transform .12s}
+  .speaker:active{transform:scale(.94)}
+  .speaker.pulse{animation:pulse .8s ease}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--indigo) 55%,transparent)}100%{box-shadow:0 0 0 22px transparent}}
+  .exq .say{font-weight:700; color:var(--ink-soft)}
+  .ptq{font-family:"Baloo 2"; font-weight:800; font-size:21px}
+  .opts{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:16px}
+  .opt{appearance:none; font-family:"Baloo 2"; font-weight:700; font-size:16px; cursor:pointer; border:2px solid var(--line); background:var(--card); color:var(--ink); border-radius:14px; padding:14px; transition:transform .1s, border-color .15s, background .15s; display:flex; align-items:center; gap:9px; justify-content:center}
+  .opt .oe{font-size:20px}
+  .opt.txt{font-family:"Nunito"; font-weight:800; font-size:15px; line-height:1.3}
+  .opt:hover{border-color:var(--indigo); transform:translateY(-2px)}
+  .opt.right{border-color:var(--teal); background:var(--teal-soft); color:var(--teal)}
+  .opt.wrong{border-color:var(--coral); background:color-mix(in srgb,var(--coral) 12%,var(--card)); color:var(--coral-deep)}
+  .fb{margin-top:14px; font-weight:800; min-height:24px; display:flex; align-items:center; gap:8px}
+  .fb.ok{color:var(--teal)} .fb.no{color:var(--coral-deep)}
+  @media (max-width:480px){ .opts{grid-template-columns:1fr} .poss{grid-template-columns:1fr} .conj{grid-template-columns:1fr} }
+  .srs .srsbar{display:flex; justify-content:space-between; align-items:center; gap:10px; margin:8px 0 8px; font-weight:800; color:var(--ink-soft); font-size:14px; flex-wrap:wrap}
+  .srs .mode{background:var(--indigo-soft); color:var(--indigo); padding:5px 12px; border-radius:999px; font-size:13px; font-weight:800}
+  .srs .prompt{display:flex; align-items:center; gap:14px; margin-bottom:4px; min-height:60px; flex-wrap:wrap}
+  .srs .prompt .say{font-weight:700; color:var(--ink-soft)}
+  .srs .alldone{font-family:"Baloo 2"; font-weight:800; font-size:20px; color:var(--teal); text-align:center; padding:22px}
+  .srsprog{height:8px; background:var(--card-2); border-radius:6px; overflow:hidden; margin-top:6px}
+  .srsprog > i{display:block; height:100%; width:0; background:linear-gradient(90deg,var(--teal),var(--gold)); transition:width .4s}
+  .game{background:linear-gradient(135deg,var(--indigo),#7a52d6); color:#fff; border:none}
+  .game h2,.game .lead{color:#fff}
+  .game .lead{color:color-mix(in srgb,#fff 84%,var(--indigo))}
+  .game .kicker .n{background:#fff; color:var(--indigo)}
+  .game .kicker .tag{color:color-mix(in srgb,#fff 78%,var(--indigo))}
+  .steps{display:grid; gap:10px; margin-top:14px}
+  .step{display:flex; gap:12px; align-items:flex-start; background:rgba(255,255,255,.12); border-radius:13px; padding:12px 14px}
+  .step .s{font-family:"Baloo 2"; font-weight:800; background:#fff; color:var(--indigo); width:26px;height:26px;border-radius:8px;display:grid;place-items:center;flex:none;font-size:14px}
+  .nav{display:flex; gap:10px; margin-top:22px}
+  .cta{flex:1; border:none; cursor:pointer; font-family:"Baloo 2"; font-weight:800; font-size:18px; color:#fff; background:var(--coral); padding:16px; border-radius:16px; box-shadow:0 10px 24px -10px var(--coral); transition:transform .12s, filter .12s}
+  .cta:hover{transform:translateY(-2px); filter:brightness(1.05)} .cta:active{transform:translateY(0)}
+  .footer{text-align:center; margin-top:26px; color:var(--ink-soft); font-size:14px}
+</style>
+
+<div class="top">
+  <div class="row">
+    <span class="logo"><span class="dot"></span>Falo</span>
+    <span class="stat">
+      <span class="chip fire">🔥 1</span>
+      <span class="chip xp">⭐ 0 XP</span>
+      <button class="themeBtn" id="theme" title="Alternar tema">🌙</button>
+    </span>
+  </div>
+  <div class="progress"><i id="bar"></i></div>
+</div>
+
+<div class="voicebar">
+  <span class="lab">🎙️ Voz:</span>
+  <select id="voiceSel" title="Escolha a voz"></select>
+  <span id="vquality"></span>
+  <span class="vtip" id="vtip">💡 Dica: abra no <b>Microsoft Edge</b> ou <b>Chrome</b> para vozes naturais (soam quase humanas) e grátis.</span>
+</div>
+
+<div class="wrap">
+
+  <header class="hero">
+    <div class="eyebrow">Módulo 3 · Verbos & Modais · Aula 20</div>
+    <h1>Should, Must, Might — <b>conselho e dedução</b></h1>
+    <p><b>should</b> = conselho (deveria). E a escala de dedução: <b>must</b> (certeza que sim), <b>can't</b> (certeza que não), <b>might</b> (talvez). Toque pra ouvir.</p>
+    <div class="goals">
+      <span class="goal">💡 Conselho</span><span class="goal">🔎 Dedução</span><span class="goal">⚖️ Certeza</span><span class="goal">🗣️ Fala</span>
+    </div>
+  </header>
+
+  <!-- 0. Ideia principal -->
+  <section class="card">
+    <div class="kicker"><span class="n">👋</span><span class="tag">A grande sacada</span></div>
+    <h2>Dar conselho e adivinhar</h2>
+    <p class="lead"><b>should</b> = deveria (conselho). E pra deduzir: <b>must</b> = deve ser (certeza), <b>can't</b> = não pode ser (impossível), <b>might</b> = pode ser (talvez).</p>
+    <div class="note">
+      <span class="em">💡</span>
+      <p><b>"He must be tired"</b> aqui não é obrigação — é dedução: "ele deve estar cansado". O contexto manda!</p>
+    </div>
+  </section>
+
+  <!-- 1. Conjugação -->
+  <section class="card">
+    <div class="kicker"><span class="n">A</span><span class="tag">conselho</span></div>
+    <h2>Should, ought to, had better</h2>
+    <p class="lead">Conselho e dedução, lado a lado. Toque em cada um pra ouvir.</p>
+    <div class="conj" id="conj"></div>
+    <div class="note">
+      <span class="em">🎯</span>
+      <p><b>should / ought to</b> = deveria. <b>had better</b> = é melhor (conselho forte, com aviso). Todos + verbo base.</p>
+    </div>
+  </section>
+
+  <!-- Armadilha do brasileiro -->
+  <section class="card trapcard">
+    <div class="kicker"><span class="n">⚠️</span><span class="tag">Armadilha do brasileiro</span></div>
+    <h2>O erro que quase todo brasileiro comete</h2>
+    <p class="lead">Escolher o modal errado muda tudo. Toque pra ouvir o jeito certo:</p>
+    <div class="traps" id="traps"></div>
+  </section>
+
+  <!-- 2. Contrações -->
+  <section class="card">
+    <div class="kicker"><span class="n">B</span><span class="tag">Como o nativo fala</span></div>
+    <h2>As formas na prática</h2>
+    <p class="lead">As formas que você mais vai ouvir e usar. Toque pra ouvir.</p>
+    <div class="poss" id="contr"></div>
+    <div class="note">
+      <span class="em">🗣️</span>
+      <p>Dedução: <b>must</b> (99% sim) → <b>might</b> (talvez) → <b>can't</b> (99% não). O negativo NUNCA é mustn't.</p>
+    </div>
+  </section>
+
+  <!-- 3. Frases reais -->
+  <section class="card">
+    <div class="kicker"><span class="n">C</span><span class="tag">Frases de verdade</span></div>
+    <h2>No dia a dia</h2>
+    <p class="lead">Frases prontas de conselho e dedução. Toque pra ouvir e repita.</p>
+    <div class="greets" id="chunks"></div>
+  </section>
+
+  <!-- 4. Negativo e pergunta -->
+  <section class="card">
+    <div class="kicker"><span class="n">D</span><span class="tag">Dedução e conselho</span></div>
+    <h2>Deduzir e recomendar</h2>
+    <p class="lead">Mais frases reais pra usar hoje mesmo. Toque pra ouvir.</p>
+    <div class="greets" id="negq"></div>
+    <div class="note warn">
+      <span class="em">⚠️</span>
+      <p>Pra dizer que algo é <b>impossível</b>, use <b>can't be</b>, nunca "mustn't be".</p>
+    </div>
+  </section>
+
+  <!-- 5. Ouça e escolha -->
+  <section class="card">
+    <div class="kicker"><span class="n">E</span><span class="tag">Entendimento</span></div>
+    <h2>Listen &amp; Choose — ouça e escolha</h2>
+    <p class="lead">Toque no alto-falante, ouça a frase e escolha a que você ouviu.</p>
+    <div class="exq">
+      <button class="speaker" id="playQ">🔊</button>
+      <span class="say">O que você ouviu?</span>
+    </div>
+    <div class="opts" id="opts"></div>
+    <div class="fb" id="fb"></div>
+  </section>
+
+  <!-- 6. Escolha a forma -->
+  <section class="card">
+    <div class="kicker"><span class="n">F</span><span class="tag">should / must / might</span></div>
+    <h2>Complete a frase</h2>
+    <p class="lead">Escolha o modal certo pra completar a frase.</p>
+    <div class="ptq" id="qsent"></div>
+    <div class="opts" id="opts3"></div>
+    <div class="fb" id="fb3"></div>
+  </section>
+
+  <!-- 7. Smart review -->
+  <section class="card srs">
+    <div class="kicker"><span class="n">★</span><span class="tag">Treino inteligente · revisão</span></div>
+    <h2>Smart Review — repetição espaçada</h2>
+    <p class="lead">Igual ao Anki: as frases voltam até você dominar, e <b>o exercício muda</b> a cada repetição. Zere o baralho.</p>
+    <div class="srsbar"><span id="srsCount">Dominadas: 0 / 0</span><span id="srsMode" class="mode"></span></div>
+    <div class="srsprog"><i id="srsBar"></i></div>
+    <div id="srsStage" style="margin-top:14px"></div>
+    <div class="fb" id="srsFb"></div>
+  </section>
+
+  <!-- 8. Dinâmica -->
+  <section class="card game">
+    <div class="kicker"><span class="n">★</span><span class="tag">Dinâmica do dia</span></div>
+    <h2>Dê conselhos e deduza</h2>
+    <p class="lead">Monte frases reais. Fale em voz alta!</p>
+    <div class="steps">
+      <div class="step"><span class="s">1</span><div>Conselho: <b>"You should rest."</b> / <b>"You shouldn't skip breakfast."</b></div></div>
+      <div class="step"><span class="s">2</span><div>Conselho forte: <b>"You'd better call her."</b> / <b>"We'd better leave now."</b></div></div>
+      <div class="step"><span class="s">3</span><div>Dedução (certeza): <b>"He must be rich."</b> / <b>"She can't be serious."</b></div></div>
+      <div class="step"><span class="s">4</span><div>Dedução (talvez): <b>"It might be true."</b> / <b>"They might come later."</b></div></div>
+    </div>
+  </section>
+
+  <div class="nav">
+    <button class="cta" id="cta">Concluir a Aula 20 &nbsp;→&nbsp; +30 XP</button>
+  </div>
+  <p class="footer">Falo · Módulo 3 · Verbos &amp; Modais · Aula 20 de 23</p>
+</div>
+
+<script>
+  // ---------- TTS ----------
+  const synth = window.speechSynthesis;
+  let enVoice=null, enVoices=[];
+  const sel=document.getElementById('voiceSel'), vq=document.getElementById('vquality'), vtip=document.getElementById('vtip');
+  function scoreVoice(v){ const n=(v.name||'').toLowerCase(); let s=0;
+    if(/natural|neural|online/.test(n)) s+=100;
+    if(/\b(aria|jenny|ava|emma|michelle|guy|andrew|brian|christopher)\b/.test(n)) s+=40;
+    if(/google/.test(n)) s+=30; if(/samantha|alex|siri/.test(n)) s+=25;
+    if(/en[-_]us/i.test(v.lang)) s+=10; if(/^en/i.test(v.lang)) s+=3;
+    if(/microsoft/.test(n) && !/natural|online/.test(n)) s-=5; return s; }
+  function loadVoices(){ const all=synth?synth.getVoices():[];
+    enVoices=all.filter(v=>/^en/i.test(v.lang)).sort((a,b)=>scoreVoice(b)-scoreVoice(a));
+    sel.innerHTML=''; enVoices.forEach((v,i)=>{ const o=document.createElement('option'); const nat=scoreVoice(v)>=100;
+      o.value=i; o.textContent=(nat?'✨ ':'')+v.name.replace('Microsoft ','').replace(' Online (Natural)',' (Natural)'); sel.appendChild(o); });
+    enVoice=enVoices[0]||null; reflect(); }
+  function reflect(){ const nat=enVoice&&scoreVoice(enVoice)>=100;
+    if(nat){ vq.textContent='✨ voz natural'; vq.className='vgood'; vtip.classList.remove('show'); }
+    else{ vq.textContent='(voz padrão)'; vq.className=''; vtip.classList.add('show'); } }
+  sel.onchange=()=>{ enVoice=enVoices[sel.value]; reflect(); say("Ready?",.95); };
+  loadVoices(); if(synth) synth.onvoiceschanged=loadVoices;
+  function say(t,rate=.9){ if(!synth) return; synth.cancel(); const u=new SpeechSynthesisUtterance(t); u.lang="en-US"; u.rate=rate; u.pitch=1; if(enVoice)u.voice=enVoice; synth.speak(u); }
+  function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+
+  // ---------- data ----------
+  const CONJ=[
+    {subj:"You", form:"should rest", en:"You should rest.", pt:"conselho — você deveria descansar", ipa:"iú chud rést", e:"😴"},
+    {subj:"You", form:"shouldn't worry", en:"You shouldn't worry.", pt:"não deveria se preocupar", ipa:"iú chúdent uôri", e:"🧘"},
+    {subj:"We", form:"ought to go", en:"We ought to go.", pt:"a gente deveria ir", ipa:"uí ót tchú gôu", e:"🚶"},
+    {subj:"You'd", form:"better hurry", en:"You'd better hurry.", pt:"conselho forte — é melhor se apressar", ipa:"iúd béter rrâri", e:"⏱️"},
+    {subj:"He", form:"must be tired", en:"He must be tired.", pt:"dedução — deve estar cansado", ipa:"rri mâst bi táiard", e:"😪"},
+    {subj:"She", form:"can't be home", en:"She can't be home.", pt:"impossível — não pode estar em casa", ipa:"chi ként bi rrôum", e:"🏠"},
+    {subj:"It", form:"might rain", en:"It might rain.", pt:"talvez — pode chover", ipa:"it máit rêin", e:"🌧️"},
+  ];
+  const CONTR=[
+    {w:"You should…", m:"Você deveria…", ipa:"iú chud", ic:"💡", say:"You should see a doctor."},
+    {w:"You shouldn't…", m:"Você não deveria…", ipa:"iú chúdent", ic:"🚫", say:"You shouldn't worry so much."},
+    {w:"You'd better…", m:"É melhor você…", ipa:"iúd béter", ic:"⏱️", say:"You'd better hurry."},
+    {w:"must be", m:"deve ser/estar", ipa:"mâst bi", ic:"✅", say:"That must be him."},
+    {w:"can't be", m:"não pode ser", ipa:"ként bi", ic:"❌", say:"She can't be home."},
+    {w:"might", m:"pode ser que", ipa:"máit", ic:"🤔", say:"It might rain later."},
+  ];
+  // .greet cards -> alimentam a prática de escrita+fala no fim
+  const CHUNKS=[
+    {en:"You should see a doctor.", ipa:"iú chud sí a dóktor", pt:"Você deveria ir ao médico.", ic:"🩺"},
+    {en:"You'd better hurry.", ipa:"iúd béter rrâri", pt:"É melhor você se apressar.", ic:"⏱️"},
+    {en:"He must be tired.", ipa:"rri mâst bi táiard", pt:"Ele deve estar cansado.", ic:"😪"},
+    {en:"It might rain later.", ipa:"it máit rêin lêiter", pt:"Pode chover mais tarde.", ic:"🌧️"},
+    {en:"That must be him.", ipa:"dét mâst bi rrim", pt:"Deve ser ele.", ic:"👀"},
+  ];
+  const NEGQ=[
+    {en:"She can't be home; her car isn't here.", ipa:"chi ként bi rrôum", pt:"Ela não pode estar em casa; o carro não está.", ic:"🚗"},
+    {en:"You shouldn't worry so much.", ipa:"iú chúdent uôri sôu mâtch", pt:"Você não deveria se preocupar tanto.", ic:"🧘"},
+    {en:"We ought to leave now.", ipa:"uí ót tchú líiv náu", pt:"A gente deveria ir agora.", ic:"🚪"},
+  ];
+  const FILL=[
+    {pt:"You ___ see a doctor.", en:"should", opts:["should", "must", "can't"], full:"You should see a doctor."},
+    {pt:"He ___ be tired.", en:"must", opts:["must", "can't", "should"], full:"He must be tired."},
+    {pt:"She ___ be home (impossível).", en:"can't", opts:["can't", "must", "should"], full:"She can't be home."},
+    {pt:"It ___ rain later (talvez).", en:"might", opts:["might", "must", "should"], full:"It might rain later."},
+    {pt:"You'd ___ hurry.", en:"better", opts:["better", "should", "must"], full:"You'd better hurry."},
+  ];
+
+  // ---------- conjugação ----------
+  const cjEl=document.getElementById('conj');
+  CONJ.forEach(c=>{ const d=document.createElement('div'); d.className='cj';
+    d.innerHTML='<span class="emoji">'+c.e+'</span><div><div class="en">'+c.subj+' <b>'+c.form+'</b></div><div class="pt">'+c.pt+' · "'+c.ipa+'"</div></div>';
+    d.onclick=()=>{ say(c.en,.9); addXP(1); }; cjEl.appendChild(d); });
+
+  // ---------- contrações ----------
+  const ctEl=document.getElementById('contr');
+  CONTR.forEach(v=>{ const d=document.createElement('div'); d.className='pcard';
+    d.innerHTML='<span class="ic">'+v.ic+'</span><div><div class="w">'+v.w+'</div><div class="m">'+v.m+' · "'+v.ipa+'"</div></div>';
+    d.onclick=()=>{ say(v.say,.92); addXP(1); }; ctEl.appendChild(d); });
+
+  // ---------- armadilha do brasileiro ----------
+  const TRAPS=[
+    {bad:"You should call the police now!", good:"You must call the police.", say:"You must call the police.", why:"should é conselho; obrigação forte é must/have to."},
+    {bad:"You had better to go.", good:"You'd better go.", say:"You'd better go.", why:"had better + verbo base, sem \"to\"."},
+    {bad:"He mustn't be home.", good:"He can't be home.", say:"He can't be home.", why:"Dedução negativa é can't, não mustn't."},
+    {bad:"It will maybe rain.", good:"It might rain.", say:"It might rain.", why:"Pra \"talvez\", use might, não \"will maybe\"."},
+  ];
+  const trEl=document.getElementById('traps');
+  TRAPS.forEach(t=>{ const d=document.createElement('div'); d.className='trap';
+    d.innerHTML='<div><span class="bad">'+t.bad+'</span><span class="arrow">→</span><span class="good">'+t.good+'</span></div><span class="why">'+t.why+'</span>';
+    d.onclick=()=>{ say(t.say,.92); addXP(2); }; trEl.appendChild(d); });
+
+  // ---------- chunks + neg/q ----------
+  function fillGreets(id,arr,x){ const el=document.getElementById(id);
+    arr.forEach(c=>{ const d=document.createElement('div'); d.className='greet';
+      d.innerHTML='<span class="mini">'+c.ic+'</span><div><div class="en">'+c.en+'</div><div class="ipa2">"'+c.ipa+'"</div></div><div class="pt">'+c.pt+'</div>';
+      d.onclick=()=>{ say(c.en,.92); addXP(x); }; el.appendChild(d); }); }
+  fillGreets('chunks',CHUNKS,2);
+  fillGreets('negq',NEGQ,2);
+
+  // ---------- listen & choose ----------
+  let ans=null, qi=0;
+  const optsEl=document.getElementById('opts'), fb=document.getElementById('fb');
+  const LC=CHUNKS.concat(NEGQ);
+  function newQ(){
+    fb.textContent=''; fb.className='fb';
+    const four=shuffle(LC.slice()).slice(0,4);
+    ans=four[(qi*3+1)%4]; qi++;
+    const shown=shuffle(four.slice());
+    optsEl.innerHTML='';
+    shown.forEach(f=>{ const b=document.createElement('button'); b.className='opt txt'; b.textContent=f.en;
+      b.onclick=()=>{ document.querySelectorAll('#opts .opt').forEach(x=>x.disabled=true);
+        if(f===ans){ b.classList.add('right'); fb.className='fb ok'; fb.textContent='✅ Perfeito!'; addXP(5); }
+        else{ b.classList.add('wrong'); fb.className='fb no'; fb.textContent='❌ Era "'+ans.en+'".';
+          document.querySelectorAll('#opts .opt').forEach(x=>{ if(x.textContent===ans.en) x.classList.add('right'); }); }
+        setTimeout(newQ,1600);
+      }; optsEl.appendChild(b); });
+  }
+  document.getElementById('playQ').onclick=function(){ this.classList.remove('pulse'); void this.offsetWidth; this.classList.add('pulse'); say(ans.en,.85); };
+  newQ();
+
+  // ---------- fill in ----------
+  let fans=null, fi=0;
+  const qsent=document.getElementById('qsent'), optsEl3=document.getElementById('opts3'), fb3=document.getElementById('fb3');
+  function newF(){
+    fb3.textContent=''; fb3.className='fb';
+    fans=FILL[fi%FILL.length]; fi++;
+    qsent.textContent='"'+fans.pt+'"';
+    const shown=shuffle(fans.opts.slice());
+    optsEl3.innerHTML='';
+    shown.forEach(o=>{ const b=document.createElement('button'); b.className='opt'; b.textContent=o;
+      b.onclick=()=>{ document.querySelectorAll('#opts3 .opt').forEach(x=>x.disabled=true);
+        if(o===fans.en){ b.classList.add('right'); fb3.className='fb ok'; fb3.textContent='✅ Isso! '+fans.full; say(fans.full,.9); addXP(6); }
+        else{ b.classList.add('wrong'); fb3.className='fb no'; fb3.textContent='❌ Era: '+fans.full;
+          document.querySelectorAll('#opts3 .opt').forEach(x=>{ if(x.textContent===fans.en) x.classList.add('right'); }); }
+        setTimeout(newF,1900);
+      }; optsEl3.appendChild(b); });
+  }
+  newF();
+
+  // ---------- smart review ----------
+  (function(){
+    const TARGET=2;
+    const deck=[];
+    shuffle(CHUNKS.slice()).slice(0,5).forEach(c=>deck.push({t:'Q', en:c.en, pt:c.pt, box:0, due:0, lastFmt:''}));
+    shuffle(NEGQ.slice()).slice(0,3).forEach(c=>deck.push({t:'Q', en:c.en, pt:c.pt, box:0, due:0, lastFmt:''}));
+    const stage=document.getElementById('srsStage'), sfb=document.getElementById('srsFb');
+    const cnt=document.getElementById('srsCount'), modeEl=document.getElementById('srsMode'), sbar=document.getElementById('srsBar');
+    const MODES={QP:'🌍 Ouça e traduza', QE:'💬 Português → inglês'};
+    let r=0;
+    function mastered(){ return deck.filter(d=>d.box>=TARGET).length; }
+    function refresh(){ const m=mastered(); cnt.textContent='Dominadas: '+m+' / '+deck.length; sbar.style.width=(m/deck.length*100)+'%'; }
+    function distractors(item,k){ return shuffle(deck.filter(d=>d!==item)).slice(0,k); }
+    function nextItem(){ let due=deck.filter(d=>d.box<TARGET && d.due<=r);
+      if(!due.length){ const rest=deck.filter(d=>d.box<TARGET); if(!rest.length) return null;
+        r=Math.min.apply(null,rest.map(d=>d.due)); due=deck.filter(d=>d.box<TARGET && d.due<=r); }
+      return shuffle(due).sort((a,b)=>a.box-b.box)[0]; }
+    function chooseFmt(item){ const all=['QP','QE']; const avail=all.filter(f=>f!==item.lastFmt);
+      const f=(avail.length?avail:all)[r%(avail.length?avail.length:all.length)]; item.lastFmt=f; return f; }
+    function optBtn(html,cls){ const o=document.createElement('button'); o.className='opt'+(cls?' '+cls:''); o.innerHTML=html; return o; }
+    function answer(item,ok,btn,isRight){
+      document.querySelectorAll('#srsStage .opt').forEach(x=>{ x.disabled=true; if(isRight(x)) x.classList.add('right'); });
+      if(ok){ item.box++; item.due=r+item.box+1; sfb.className='fb ok'; sfb.textContent='✅ Boa!'; addXP(4); }
+      else{ btn.classList.add('wrong'); item.box=Math.max(0,item.box-1); item.due=r+1; sfb.className='fb no'; sfb.textContent='❌ Ainda não — volta já já.'; }
+      r++; refresh(); setTimeout(step,1150);
+    }
+    function step(){
+      sfb.textContent=''; sfb.className='fb';
+      const item=nextItem();
+      if(!item){ modeEl.textContent='🎉 completo'; stage.innerHTML='<div class="alldone">🎉 Baralho zerado! Você já dá conselhos e deduz como nativo.</div>'; addXP(15); return; }
+      const f=chooseFmt(item); modeEl.textContent=MODES[f];
+      stage.innerHTML='';
+      const prompt=document.createElement('div'); prompt.className='prompt';
+      const opts=document.createElement('div'); opts.className='opts';
+      const choices=shuffle([item].concat(distractors(item,3)));
+      if(f==='QP'){
+        const sp=document.createElement('button'); sp.className='speaker'; sp.textContent='🔊'; sp.onclick=()=>say(item.en,.9);
+        prompt.appendChild(sp); const h=document.createElement('span'); h.className='say'; h.textContent='Ouça e escolha a tradução'; prompt.appendChild(h);
+        say(item.en,.9);
+        choices.forEach(c=>{ const o=optBtn(c.pt,'txt'); o.onclick=()=>answer(item,c===item,o,x=>x.textContent===item.pt); opts.appendChild(o); });
+      } else {
+        const q=document.createElement('div'); q.className='ptq'; q.textContent='"'+item.pt+'"'; prompt.appendChild(q);
+        choices.forEach(c=>{ const o=optBtn(c.en,'txt'); o.onclick=()=>answer(item,c===item,o,x=>x.textContent===item.en); opts.appendChild(o); });
+      }
+      stage.appendChild(prompt); stage.appendChild(opts);
+    }
+    refresh(); step();
+  })();
+
+  // ---------- XP / progress ----------
+  let xp=0, done=false;
+  const xpChip=document.querySelector('.chip.xp'), bar=document.getElementById('bar');
+  function addXP(n){ xp+=n; xpChip.textContent='⭐ '+xp+' XP'; bar.style.width=Math.min(100,5+xp*0.7)+'%'; }
+  document.getElementById('cta').onclick=function(){
+    if(done){ say("On to lesson twenty-one!",.95); return; }
+    done=true; addXP(30); bar.style.width='100%';
+    this.textContent='🎉 Aula 20 concluída!'; this.style.background='var(--teal)'; this.style.boxShadow='0 10px 24px -10px var(--teal)';
+    document.querySelector('.chip.fire').textContent='🔥 2';
+    say("Great job! You can give advice and make deductions now!",.95);
+  };
+
+  // ---------- intro ----------
+  const LESSON_INTRO="Module three. Lesson twenty. Advice and deduction.";
+  let _introDone=false; function playIntro(){ if(_introDone) return; _introDone=true; say(LESSON_INTRO,.95); }
+  window.addEventListener("load",()=>setTimeout(playIntro,600));
+  window.addEventListener("pointerdown",playIntro,{once:true});
+
+  // ---------- theme ----------
+  const tb=document.getElementById('theme');
+  tb.onclick=()=>{ const cur=document.documentElement.getAttribute('data-theme');
+    const isDark=cur?cur==='dark':matchMedia('(prefers-color-scheme:dark)').matches;
+    document.documentElement.setAttribute('data-theme', isDark?'light':'dark'); tb.textContent=isDark?'🌙':'☀️'; };
+</script>
+<script>/*falo-practice*/(function(){if(window.__faloPrx)return;window.__faloPrx=1;try{
+document.head.insertAdjacentHTML("beforeend","<style>"+
+".card.game.prxwrap{background:var(--card)!important;color:var(--ink)!important;border:1px solid var(--line)!important;box-shadow:none!important;background-image:none!important}"+
+".card.game.prxwrap .lead{color:var(--ink-soft,#8a7a75)!important}"+
+".card.game.prxwrap h2{color:var(--ink)!important}"+
+".card.game.prxwrap .kicker .n{background:var(--coral,#FF5630)!important;color:#fff!important}"+
+".prx{background:var(--card-2);border:1px solid var(--line);border-radius:16px;padding:16px;margin-top:14px}"+
+".prx-h{font-weight:800;font-size:15.5px;color:var(--ink)}"+
+".prx-sub{font-size:12.5px;color:var(--ink-soft,#8a7a75);font-weight:600;margin-top:6px}"+
+".prx-target{font-size:19px;font-weight:800;margin:8px 0 12px;line-height:1.3}"+
+".prx-write .prx-target{color:var(--ink)}"+
+".prx-speak .prx-target{color:var(--coral,#FF5630)}"+
+".prx-row{display:flex;gap:9px}"+
+".prx-in{flex:1;background:var(--card);border:2px solid var(--line);border-radius:12px;padding:12px 13px;font-size:15px;color:var(--ink);font-family:inherit;outline:none;min-width:0}"+
+".prx-in:focus{border-color:var(--coral,#FF5630)}"+
+".prx-check{flex:none;background:var(--coral,#FF5630);color:#fff;border:none;border-radius:12px;padding:0 18px;font-weight:800;font-size:14px;cursor:pointer;font-family:inherit}"+
+".prx-micwrap{display:flex;flex-direction:column;align-items:center;gap:9px;margin:10px 0 4px}"+
+".prx-mic{width:80px;height:80px;border-radius:50%;border:none;background:var(--coral,#FF5630);color:#fff;font-size:34px;cursor:pointer;display:grid;place-items:center;touch-action:none;-webkit-user-select:none;user-select:none;transition:transform .1s}"+
+".prx-mic.rec{transform:scale(1.12);animation:prxpulse 1s infinite}"+
+".prx-mic.cancel{background:#8a8a8a}"+
+"@keyframes prxpulse{0%{box-shadow:0 0 0 0 rgba(255,86,48,.55)}100%{box-shadow:0 0 0 24px transparent}}"+
+".prx-mich{font-size:12px;color:var(--ink-soft,#8a7a75);font-weight:700;text-align:center}"+
+".prx-live{background:var(--card);border:2px dashed var(--line);border-radius:12px;padding:13px;min-height:48px;font-size:16px;font-weight:800;color:var(--ink);text-align:center;margin-top:8px;display:flex;align-items:center;justify-content:center;line-height:1.3}"+
+".prx-live.empty{color:var(--ink-soft,#8a7a75);font-weight:600;font-size:13px}"+
+".prx-live.on{border-style:solid;border-color:var(--coral,#FF5630)}"+
+".prx-fb{font-size:13.5px;font-weight:700;margin-top:9px;min-height:18px;line-height:1.35;text-align:center}"+
+".prx-fb.ok{color:var(--teal,#0FB39B)}.prx-fb.no{color:var(--coral,#FF5630)}"+
+".prx-next{margin-top:14px;background:rgba(255,86,48,.12);border:1.5px solid var(--coral,#FF5630);color:var(--coral,#FF5630);border-radius:12px;padding:11px 16px;font-size:13.5px;font-weight:800;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;justify-content:center;gap:6px}"+
+".prx-next:active{transform:scale(.97)}"+
+".prx-num{font-size:27px;font-weight:800;color:var(--ink)}"+
+".prx-tag{display:inline-block;font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;padding:3px 9px;border-radius:999px;vertical-align:middle;margin-left:8px}"+
+".prx-tag.card{background:rgba(15,179,155,.20);color:var(--teal,#0FB39B)}"+
+".prx-tag.ord{background:rgba(255,86,48,.20);color:var(--coral,#FF5630)}"+
+"</style>");
+function init(){
+  var game=document.querySelector(".card.game"); if(!game) return;
+  var oldS=document.querySelector(".sprax"); if(oldS) oldS.remove();
+  var pairs=[];
+  // 1) FRASES das saudacoes (.greet: .en / .pt)
+  [].slice.call(document.querySelectorAll(".greet")).forEach(function(g){
+    var en=g.querySelector(".en"), pt=g.querySelector(".pt"); if(!en||!pt) return;
+    var ptxt=pt.textContent, sm=pt.querySelector("small"); if(sm) ptxt=ptxt.replace(sm.textContent,"");
+    var e=en.textContent.trim(), p=ptxt.trim();
+    if(e&&p&&/[a-zA-Z]/.test(e)) pairs.push({en:e,pt:p,kind:"phrase"});
+  });
+  // 2) NUMEROS CARDINAIS (.num: .fig numero + .wd palavra)
+  [].slice.call(document.querySelectorAll(".num")).forEach(function(n){
+    var f=n.querySelector(".fig"), w=n.querySelector(".wd"); if(!f||!w) return;
+    var num=f.textContent.trim(), wd=w.textContent.trim();
+    if(num&&wd&&/\d/.test(num)&&/[a-zA-Z]/.test(wd)) pairs.push({en:wd,pt:num,kind:"num",ord:false});
+  });
+  // 3) NUMEROS ORDINAIS (.ocard: .b abrev + .en palavra)
+  [].slice.call(document.querySelectorAll(".ocard")).forEach(function(o){
+    var b=o.querySelector(".b"), e=o.querySelector(".en"); if(!b||!e) return;
+    var ab=b.textContent.trim(), wd=e.textContent.trim();
+    if(ab&&wd&&/[a-zA-Z]/.test(wd)) pairs.push({en:wd,pt:ab,kind:"num",ord:true});
+  });
+  // 4) NUMEROS em cards .ex "137 = one hundred and thirty-seven" (left numerico)
+  [].slice.call(document.querySelectorAll(".ex,.exq")).forEach(function(e){
+    (e.textContent||"").replace(/\([^)]*\)/g,"").split(/[·•|;\n]+/).forEach(function(seg){
+      var i=seg.indexOf("="); if(i<0) return;
+      var left=seg.slice(0,i).replace(/[“”‘’"']/g,"").trim(), right=seg.slice(i+1).replace(/[“”‘’"']/g,"").trim();
+      if(left&&right&&/^[\d.\sº°]*\d[\d.\sº°]*$/.test(left)&&/[a-zA-Z]{2,}/.test(right)&&right.length<=70){ pairs.push({en:right,pt:left,kind:"num",ord:/[º°]/.test(left)||/(th|first|second|third)$/.test(right.toLowerCase().replace(/[^a-z]/g,""))}); }
+    });
+  });
+  // remove repetidos e embaralha (mistura frases + numeros)
+  var _sn={}; pairs=pairs.filter(function(p){var k=p.kind+"|"+p.en.toLowerCase()+"|"+p.pt;if(_sn[k])return false;_sn[k]=1;return true;});
+  for(var _i=pairs.length-1;_i>0;_i--){var _j=Math.floor(Math.random()*(_i+1)),_t=pairs[_i];pairs[_i]=pairs[_j];pairs[_j]=_t;}
+  if(pairs.length<1) return;
+  var kicker=game.querySelector(".kicker"); game.innerHTML=""; game.classList.add("prxwrap"); if(kicker) game.appendChild(kicker);
+  var _lead="Escreva e fale em inglês — treine as frases e os números da aula.";
+  var _wsub="Escreva em inglês:";
+  var _ssub="Toque no microfone e fale em inglês:";
+  var _btn="🔀 Próximo";
+  var _ph="Digite em inglês…";
+  game.insertAdjacentHTML("beforeend",'<h2>Pratique escrita e fala 🎯</h2><p class="lead">'+_lead+'</p>'+
+  '<div class="prx prx-write"><div class="prx-h">✍️ Treino de escrita</div><div class="prx-sub">'+_wsub+'</div><div class="prx-target" id="wT"></div><div class="prx-row"><input class="prx-in" id="wI" placeholder="'+_ph+'" autocomplete="off" autocapitalize="off" autocorrect="off"><button class="prx-check" id="wC">Ver</button></div><div class="prx-fb" id="wF"></div><button class="prx-next" id="wN">'+_btn+'</button></div>'+
+  '<div class="prx prx-speak"><div class="prx-h">🎤 Treino de fala</div><div class="prx-sub">'+_ssub+'</div><div class="prx-target" id="sT"></div><div class="prx-micwrap"><button class="prx-mic" id="sM" type="button">🎤</button><span class="prx-mich" id="sH">Toque para falar</span></div><div class="prx-live empty" id="sLive">O que você falar aparece aqui…</div><div class="prx-fb" id="sF"></div><button class="prx-next" id="sN">'+_btn+'</button></div>');
+  // move a pratica pro fim da aula (depois do Smart Review, antes do "Concluir aula")
+  try{var _cta=document.getElementById("cta")||document.querySelector(".cta");if(_cta){var _wrap=(_cta.closest&&_cta.closest(".nav"));if(_wrap&&_wrap.parentNode){_wrap.parentNode.insertBefore(game,_wrap);}else if(_cta.parentNode){_cta.parentNode.insertBefore(game,_cta);}}}catch(e){}
+  function norm(s){return (s||"").toLowerCase().replace(/[-‐-―_]/g," ").replace(/[^a-z0-9\s]/g,"").replace(/\s+/g," ").trim();}
+  function numHTML(p){return '<span class="prx-num">'+p.pt+'</span><span class="prx-tag '+(p.ord?"ord":"card")+'">'+(p.ord?"ordinal":"cardinal")+'</span>';}
+  function hap(p){try{if(navigator.vibrate)navigator.vibrate(p);}catch(e){}}
+  var _ac=null;function _ctx(){try{_ac=_ac||new(window.AudioContext||window.webkitAudioContext)();if(_ac.state==="suspended")_ac.resume();}catch(e){_ac=null;}return _ac;}
+  function tone(f,d,t,w,gg){var a=_ctx();if(!a)return;var o=a.createOscillator(),n=a.createGain();o.type=t||"sine";o.frequency.value=f;o.connect(n);n.connect(a.destination);var s=a.currentTime+(w||0);n.gain.setValueAtTime(gg||0.06,s);n.gain.exponentialRampToValueAtTime(0.0001,s+d);o.start(s);o.stop(s+d);}
+  function sfx(k){try{if(k==="ok"){tone(660,.12,"triangle",0,.06);tone(990,.15,"triangle",.1,.06);}else{tone(340,.15,"sine",0,.05);tone(220,.2,"sine",.1,.05);}}catch(e){}}
+  var g=game;
+  // ESCRITA
+  var wi=0,wT=g.querySelector("#wT"),wI=g.querySelector("#wI"),wC=g.querySelector("#wC"),wF=g.querySelector("#wF"),wN=g.querySelector("#wN");
+  function wShow(){var p=pairs[wi];if(p.kind==="num"){wT.innerHTML=numHTML(p);}else{wT.textContent="“"+p.pt+"”";}wI.value="";wF.textContent="";wF.className="prx-fb";}
+  function wDo(){var v=wI.value.trim();if(!v)return;if(norm(v)===norm(pairs[wi].en)){wF.textContent="✅ Perfeito! “"+pairs[wi].en+"”";wF.className="prx-fb ok";sfx("ok");hap([0,30,40,60]);}else{wF.textContent="❌ Quase! O certo é: “"+pairs[wi].en+"”";wF.className="prx-fb no";sfx("no");hap(20);}}
+  wC.onclick=wDo; wI.onkeydown=function(e){if(e.key==="Enter")wDo();}; wN.onclick=function(){wi=(wi+1)%pairs.length;wShow();}; wShow();
+  // FALA (toque pra falar, para sozinho no silencio; permissao via pop-up in-app)
+  var si=0,sT=g.querySelector("#sT"),sM=g.querySelector("#sM"),sH=g.querySelector("#sH"),sLive=g.querySelector("#sLive"),sF=g.querySelector("#sF"),sN=g.querySelector("#sN");
+  function liveSet(txt,cls){sLive.textContent=txt;sLive.className="prx-live"+(cls?(" "+cls):"");}
+  function sShow(){var p=pairs[si];if(p.kind==="num"){sT.innerHTML=numHTML(p);}else{sT.textContent="“"+p.en+"”";}liveSet("O que você falar aparece aqui…","empty");sF.textContent="";sF.className="prx-fb";sH.textContent="Toque para falar";sM.classList.remove("rec");}
+  sN.onclick=function(){si=(si+1)%pairs.length;sShow();}; sShow();
+  function sCheck(said,score){said=(said||"").trim();if(!said){sF.textContent="🔇 Não ouvi nada. Toque e fale a frase.";sF.className="prx-fb no";liveSet("O que você falar aparece aqui…","empty");return;}liveSet(said);var ex=(score!=null&&!isNaN(score))?(" · pronúncia "+score+"/100"):"";var ok=norm(said)===norm(pairs[si].en)||(score!=null&&score>=80);if(ok){sF.textContent="✅ Isso! Você falou certinho."+ex;sF.className="prx-fb ok";sfx("ok");hap([0,30,40,60]);}else{sF.textContent="🔁 Ficou perto! Toque e tente de novo."+ex;sF.className="prx-fb no";sfx("no");hap(20);}}
+  function rep(sec){try{fetch("/api/usage",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({seconds:sec})});}catch(e){}}
+  var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  var isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent||"")||(/Macintosh/.test(navigator.userAgent||"")&&"ontouchend"in document);
+  // iPhone/iOS nao tem Web Speech -> usa AZURE (chave protegida no servidor) c/ nota de pronuncia.
+  if(!SR||isIOS){ setupAzure(); return; }
+  var rec=null,listening=false,micOK=false,lastText="";
+  function ensureMic(){return new Promise(function(res){ if(micOK){res(true);return;} if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){res(true);return;} navigator.mediaDevices.getUserMedia({audio:true}).then(function(st){try{st.getTracks().forEach(function(t){t.stop();});}catch(e){} micOK=true; res(true);}).catch(function(){res(false);}); });}
+  function startRec(){ try{rec=new SR();}catch(e){return;} rec.lang="en-US";rec.interimResults=true;rec.continuous=false;rec.maxAlternatives=1;lastText="";
+    rec.onstart=function(){listening=true;micOK=true;sM.classList.add("rec");sH.textContent="🎙️ Fale agora…";liveSet("…","on");sF.textContent="";sF.className="prx-fb";};
+    rec.onresult=function(e){var it="",fin="";for(var k=0;k<e.results.length;k++){var t=e.results[k][0].transcript;if(e.results[k].isFinal)fin+=t;else it+=t;}lastText=(fin||it);liveSet(lastText||"…","on");};
+    rec.onerror=function(ev){listening=false;sM.classList.remove("rec");sH.textContent="Toque para falar";if(ev.error==="not-allowed"||ev.error==="service-not-allowed"){micOK=false;sF.textContent="⚠️ Toque no microfone de novo e escolha “Permitir”.";sF.className="prx-fb no";}else if(ev.error==="no-speech"){sF.textContent="🔇 Não ouvi nada. Toque e fale a frase.";sF.className="prx-fb no";liveSet("O que você falar aparece aqui…","empty");}};
+    rec.onend=function(){listening=false;sM.classList.remove("rec");sH.textContent="Toque para falar";sCheck((lastText||"").trim());};
+    try{rec.start();}catch(e){}
+  }
+  var isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent||"");
+  function help(){ var m; if(isIOS){ m="No iPhone, o microfone funciona no <b>Safari</b> (o app instalado bloqueia). Abra pelo Safari, ou use o campo de <b>escrita</b> acima."; } else { m="Toque nos <b>3 pontinhos (⋮)</b> do navegador → <b>Configurações do site</b> → <b>Microfone</b> → <b>Permitir</b>. (Ou desinstale e reinstale o app e escolha <b>Permitir</b>.)"; } sF.innerHTML="⚠️ Microfone bloqueado. "+m; sF.className="prx-fb no"; sH.textContent="Toque para falar"; }
+  sM.onclick=function(){ if(listening){try{rec.stop();}catch(e){}return;}
+    if(micOK){ sM.classList.add("rec"); sH.textContent="🎙️ Fale agora…"; liveSet("…","on"); sF.textContent=""; sF.className="prx-fb"; startRec(); return; }
+    sH.textContent="Preparando…"; sF.textContent=""; sF.className="prx-fb";
+    var go=function(){ ensureMic().then(function(ok){ if(ok){startRec();} else {help();} }); };
+    try{ if(navigator.permissions&&navigator.permissions.query){ navigator.permissions.query({name:"microphone"}).then(function(st){ if(st.state==="denied"){help();} else {go();} }).catch(go); } else { go(); } }catch(e){ go(); }
+  };
+  // ===== iPhone/iOS: Azure Speech (chave no servidor) + nota de pronuncia =====
+  function setupAzure(){
+    var azListening=false;
+    sH.textContent="Toque para falar";
+    function loadSDK(cb){ if(window.SpeechSDK){cb();return;} var s=document.createElement("script"); s.src="https://cdn.jsdelivr.net/npm/microsoft-cognitiveservices-speech-sdk@1.41.0/distrib/browser/microsoft.cognitiveservices.speech.sdk.bundle-min.js"; s.onload=function(){cb();}; s.onerror=function(){sF.textContent="Nao consegui carregar o servico de voz. Verifique a internet.";sF.className="prx-fb no";sH.textContent="Toque para falar";}; document.head.appendChild(s); }
+    function recognize(){
+      sH.textContent="Preparando…"; sF.textContent=""; sF.className="prx-fb";
+      loadSDK(function(){
+        fetch("/api/token").then(function(r){return r.json();}).then(function(d){
+          if(!d||!d.token){ sF.textContent="Servico de voz indisponivel agora. Use a escrita acima ou tente mais tarde."; sF.className="prx-fb no"; sH.textContent="Toque para falar"; return; }
+          var S=window.SpeechSDK;
+          var sc=S.SpeechConfig.fromAuthorizationToken(d.token,d.region); sc.speechRecognitionLanguage="en-US";
+          var ac=S.AudioConfig.fromDefaultMicrophoneInput();
+          var reco=new S.SpeechRecognizer(sc,ac);
+          try{ var pa=new S.PronunciationAssessmentConfig(pairs[si].en, S.PronunciationAssessmentGradingSystem.HundredMark, S.PronunciationAssessmentGranularity.Phoneme, false); pa.applyTo(reco); }catch(e){}
+          var t0=Date.now();
+          azListening=true; sM.classList.add("rec"); sH.textContent="🎙️ Fale agora…"; liveSet("…","on");
+          reco.recognizing=function(s,e){ if(e.result&&e.result.text) liveSet(e.result.text,"on"); };
+          reco.recognizeOnceAsync(function(res){
+            var dur=Math.max(1,Math.round((Date.now()-t0)/1000)); rep(dur);
+            azListening=false; sM.classList.remove("rec"); sH.textContent="Toque para falar";
+            var said=(res&&res.text)?res.text:""; var score=null;
+            try{ var pr=S.PronunciationAssessmentResult.fromResult(res); if(pr&&pr.pronunciationScore!=null) score=Math.round(pr.pronunciationScore); }catch(e){}
+            sCheck(said,score);
+            try{reco.close();}catch(e){}
+          }, function(err){
+            azListening=false; sM.classList.remove("rec"); sH.textContent="Toque para falar";
+            sF.textContent="⚠️ Nao consegui ouvir. Toque em Permitir o microfone e tente de novo."; sF.className="prx-fb no";
+            try{reco.close();}catch(e){}
+          });
+        }).catch(function(){ sF.textContent="Sem conexao com o servico de voz. Tente de novo."; sF.className="prx-fb no"; sH.textContent="Toque para falar"; });
+      });
+    }
+    sM.onclick=function(){ if(azListening){return;} recognize(); };
+  }
+}
+// roda DEPOIS do load completo + atraso, pra pegar numeros/ordinais que a aula gera tarde
+if(document.readyState==="complete"){setTimeout(init,600);}else{window.addEventListener("load",function(){setTimeout(init,600);});}
+}catch(e){}})();</script>
+<script>/*falo-fx*/(function(){if(window.__faloFx)return;window.__faloFx=1;try{
+var _a=null;function ac(){try{_a=_a||new(window.AudioContext||window.webkitAudioContext)();}catch(e){_a=null;}return _a;}
+function bp(f,d,t,w,g){var a=ac();if(!a)return;var o=a.createOscillator(),n=a.createGain();o.type=t||'sine';o.frequency.value=f;o.connect(n);n.connect(a.destination);var s=a.currentTime+(w||0);n.gain.setValueAtTime(g||0.05,s);n.gain.exponentialRampToValueAtTime(0.0001,s+d);o.start(s);o.stop(s+d);}
+function sfx(k){try{if(k==='correct'){bp(660,.11,'triangle',0,.05);bp(990,.12,'triangle',.08,.05);}else if(k==='wrong'){bp(210,.16,'sawtooth',0,.04);bp(150,.2,'sawtooth',.08,.04);}else if(k==='win'){[523,659,784,1047].forEach(function(f,i){bp(f,.19,'triangle',i*.1,.06);});}}catch(e){}}
+function hap(p){try{if(navigator.vibrate)navigator.vibrate(p);}catch(e){}}
+function conf(n){n=n||120;var c=['#FF5630','#0FB39B','#F5A623','#FF7B4D','#7A5CFF'];for(var i=0;i<n;i++){(function(i){var p=document.createElement('i');p.style.cssText='position:fixed;top:-14px;width:9px;height:14px;border-radius:2px;z-index:99999;pointer-events:none;left:'+(Math.random()*100)+'%;background:'+c[i%c.length];var dx=(Math.random()*2-1)*140,rot=Math.floor(Math.random()*720-360);try{p.animate([{transform:'translateY(0) translateX(0) rotate(0)',opacity:1},{transform:'translateY(105vh) translateX('+dx+'px) rotate('+rot+'deg)',opacity:.15}],{duration:1500+Math.random()*400,easing:'ease-in',delay:Math.random()*250});}catch(e){}document.body.appendChild(p);setTimeout(function(){try{p.remove();}catch(e){}},2100);})(i);}}
+document.addEventListener('click',function(e){var t=e.target;var opt=t&&t.closest?t.closest('.opt'):null;if(!opt)return;setTimeout(function(){if(opt.classList.contains('wrong')){sfx('wrong');hap(60);}else if(opt.classList.contains('right')){sfx('correct');hap(15);}},0);},true);
+var fDone=false,fDeck=false;
+function scan(s){if(!s||s.length>200)return;if(!fDone&&/conclu[ií]da/i.test(s)){fDone=true;sfx('win');hap([0,40,50,40,50,90]);conf(150);}else if(!fDeck&&/Baralho zerado/i.test(s)){fDeck=true;sfx('win');hap([0,30,40,60]);conf(90);}}
+try{var mo=new MutationObserver(function(m){for(var i=0;i<m.length;i++){var x=m[i];if(x.type==='characterData'){scan(x.target&&x.target.data);}else if(x.target){scan(x.target.textContent);}}});mo.observe(document.body,{childList:true,subtree:true,characterData:true});}catch(e){}
+}catch(e){}})();</script>
