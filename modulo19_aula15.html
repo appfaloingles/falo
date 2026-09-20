@@ -500,24 +500,47 @@ document.head.insertAdjacentHTML("beforeend","<style>"+
 ".prx-live.on{border-style:solid;border-color:var(--coral,#FF5630)}"+
 ".prx-fb{font-size:13.5px;font-weight:700;margin-top:9px;min-height:18px;line-height:1.35;text-align:center}"+
 ".prx-fb.ok{color:var(--teal,#0FB39B)}.prx-fb.no{color:var(--coral,#FF5630)}"+
-".prx-next{margin-top:12px;background:transparent;border:1px solid var(--line);color:var(--ink-soft,#8a7a75);border-radius:10px;padding:8px 13px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit;display:block}"+
+".prx-next{margin-top:14px;background:rgba(255,86,48,.12);border:1.5px solid var(--coral,#FF5630);color:var(--coral,#FF5630);border-radius:12px;padding:11px 16px;font-size:13.5px;font-weight:800;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;justify-content:center;gap:6px}"+
+".prx-next:active{transform:scale(.97)}"+
+".prx-num{font-size:27px;font-weight:800;color:var(--ink)}"+
+".prx-tag{display:inline-block;font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;padding:3px 9px;border-radius:999px;vertical-align:middle;margin-left:8px}"+
+".prx-tag.card{background:rgba(15,179,155,.20);color:var(--teal,#0FB39B)}"+
+".prx-tag.ord{background:rgba(255,86,48,.20);color:var(--coral,#FF5630)}"+
 "</style>");
 function init(){
   var game=document.querySelector(".card.game"); if(!game) return;
   var oldS=document.querySelector(".sprax"); if(oldS) oldS.remove();
+  var numMode=false;
   var pairs=[].slice.call(document.querySelectorAll(".greet")).map(function(g){
     var en=g.querySelector(".en"), pt=g.querySelector(".pt"); if(!en||!pt) return null;
     var ptxt=pt.textContent, sm=pt.querySelector("small"); if(sm) ptxt=ptxt.replace(sm.textContent,"");
     return {en:en.textContent.trim(), pt:ptxt.trim()};
   }).filter(function(p){return p&&p.en&&p.pt&&/[a-zA-Z]/.test(p.en);});
+  if(pairs.length<1){ // plano B: aulas sem .greet (ex: numeros) -> pares "A = B" dos cards .ex/.exq
+    [].slice.call(document.querySelectorAll(".ex,.exq")).forEach(function(e){
+      (e.textContent||"").replace(/\([^)]*\)/g,"").split(/[·•|;\n]+/).forEach(function(seg){
+        var i=seg.indexOf("="); if(i<0) return;
+        var left=seg.slice(0,i).replace(/[“”‘’"']/g,"").trim(), right=seg.slice(i+1).replace(/[“”‘’"']/g,"").trim();
+        if(left&&right&&/[a-zA-Z]{2,}/.test(right)&&right.length<=70&&left.length<=40){ var _o=/[º°]/.test(left)||/(th|first|second|third)$/.test(right.toLowerCase().replace(/[^a-z]/g,"")); pairs.push({en:right,pt:left,ord:_o}); }
+      });
+    });
+    var _sn={}; pairs=pairs.filter(function(p){var k=p.en.toLowerCase();if(_sn[k])return false;_sn[k]=1;return true;});
+    numMode=pairs.length>0;
+  }
   if(pairs.length<1) return;
   var kicker=game.querySelector(".kicker"); game.innerHTML=""; game.classList.add("prxwrap"); if(kicker) game.appendChild(kicker);
-  game.insertAdjacentHTML("beforeend",'<h2>Pratique escrita e fala 🎯</h2><p class="lead">Escreva em inglês e depois fale a frase — do jeito que se usa de verdade.</p>'+
-  '<div class="prx prx-write"><div class="prx-h">✍️ Treino de escrita</div><div class="prx-sub">Escreva em inglês:</div><div class="prx-target" id="wT"></div><div class="prx-row"><input class="prx-in" id="wI" placeholder="Digite em inglês…" autocomplete="off" autocapitalize="off" autocorrect="off"><button class="prx-check" id="wC">Ver</button></div><div class="prx-fb" id="wF"></div><button class="prx-next" id="wN">🔀 Outra frase</button></div>'+
-  '<div class="prx prx-speak"><div class="prx-h">🎤 Treino de fala</div><div class="prx-sub">Toque no microfone e fale a frase:</div><div class="prx-target" id="sT"></div><div class="prx-micwrap"><button class="prx-mic" id="sM" type="button">🎤</button><span class="prx-mich" id="sH">Toque para falar</span></div><div class="prx-live empty" id="sLive">O que você falar aparece aqui…</div><div class="prx-fb" id="sF"></div><button class="prx-next" id="sN">🔀 Outra frase</button></div>');
+  var _lead=numMode?"Veja o número e escreva/fale em inglês — cardinais e ordinais.":"Escreva em inglês e depois fale a frase — do jeito que se usa de verdade.";
+  var _wsub=numMode?"Escreva o número em inglês:":"Escreva em inglês:";
+  var _ssub=numMode?"Fale o número em inglês:":"Toque no microfone e fale a frase:";
+  var _btn=numMode?"🔀 Outro número":"🔀 Outra frase";
+  var _ph=numMode?"Digite o número em inglês…":"Digite em inglês…";
+  game.insertAdjacentHTML("beforeend",'<h2>Pratique escrita e fala 🎯</h2><p class="lead">'+_lead+'</p>'+
+  '<div class="prx prx-write"><div class="prx-h">✍️ Treino de escrita</div><div class="prx-sub">'+_wsub+'</div><div class="prx-target" id="wT"></div><div class="prx-row"><input class="prx-in" id="wI" placeholder="'+_ph+'" autocomplete="off" autocapitalize="off" autocorrect="off"><button class="prx-check" id="wC">Ver</button></div><div class="prx-fb" id="wF"></div><button class="prx-next" id="wN">'+_btn+'</button></div>'+
+  '<div class="prx prx-speak"><div class="prx-h">🎤 Treino de fala</div><div class="prx-sub">'+_ssub+'</div><div class="prx-target" id="sT"></div><div class="prx-micwrap"><button class="prx-mic" id="sM" type="button">🎤</button><span class="prx-mich" id="sH">Toque para falar</span></div><div class="prx-live empty" id="sLive">O que você falar aparece aqui…</div><div class="prx-fb" id="sF"></div><button class="prx-next" id="sN">'+_btn+'</button></div>');
   // move a pratica pro fim da aula (depois do Smart Review, antes do "Concluir aula")
   try{var _cta=document.getElementById("cta")||document.querySelector(".cta");if(_cta){var _wrap=(_cta.closest&&_cta.closest(".nav"));if(_wrap&&_wrap.parentNode){_wrap.parentNode.insertBefore(game,_wrap);}else if(_cta.parentNode){_cta.parentNode.insertBefore(game,_cta);}}}catch(e){}
-  function norm(s){return (s||"").toLowerCase().replace(/[^a-z0-9\s]/g,"").replace(/\s+/g," ").trim();}
+  function norm(s){return (s||"").toLowerCase().replace(/[-‐-―_]/g," ").replace(/[^a-z0-9\s]/g,"").replace(/\s+/g," ").trim();}
+  function numHTML(p){return '<span class="prx-num">'+p.pt+'</span><span class="prx-tag '+(p.ord?"ord":"card")+'">'+(p.ord?"ordinal":"cardinal")+'</span>';}
   function hap(p){try{if(navigator.vibrate)navigator.vibrate(p);}catch(e){}}
   var _ac=null;function _ctx(){try{_ac=_ac||new(window.AudioContext||window.webkitAudioContext)();if(_ac.state==="suspended")_ac.resume();}catch(e){_ac=null;}return _ac;}
   function tone(f,d,t,w,gg){var a=_ctx();if(!a)return;var o=a.createOscillator(),n=a.createGain();o.type=t||"sine";o.frequency.value=f;o.connect(n);n.connect(a.destination);var s=a.currentTime+(w||0);n.gain.setValueAtTime(gg||0.06,s);n.gain.exponentialRampToValueAtTime(0.0001,s+d);o.start(s);o.stop(s+d);}
@@ -525,13 +548,13 @@ function init(){
   var g=game;
   // ESCRITA
   var wi=0,wT=g.querySelector("#wT"),wI=g.querySelector("#wI"),wC=g.querySelector("#wC"),wF=g.querySelector("#wF"),wN=g.querySelector("#wN");
-  function wShow(){wT.textContent="“"+pairs[wi].pt+"”";wI.value="";wF.textContent="";wF.className="prx-fb";}
+  function wShow(){if(numMode){wT.innerHTML=numHTML(pairs[wi]);}else{wT.textContent="“"+pairs[wi].pt+"”";}wI.value="";wF.textContent="";wF.className="prx-fb";}
   function wDo(){var v=wI.value.trim();if(!v)return;if(norm(v)===norm(pairs[wi].en)){wF.textContent="✅ Perfeito! “"+pairs[wi].en+"”";wF.className="prx-fb ok";sfx("ok");hap([0,30,40,60]);}else{wF.textContent="❌ Quase! O certo é: “"+pairs[wi].en+"”";wF.className="prx-fb no";sfx("no");hap(20);}}
   wC.onclick=wDo; wI.onkeydown=function(e){if(e.key==="Enter")wDo();}; wN.onclick=function(){wi=(wi+1)%pairs.length;wShow();}; wShow();
   // FALA (toque pra falar, para sozinho no silencio; permissao via pop-up in-app)
   var si=0,sT=g.querySelector("#sT"),sM=g.querySelector("#sM"),sH=g.querySelector("#sH"),sLive=g.querySelector("#sLive"),sF=g.querySelector("#sF"),sN=g.querySelector("#sN");
   function liveSet(txt,cls){sLive.textContent=txt;sLive.className="prx-live"+(cls?(" "+cls):"");}
-  function sShow(){sT.textContent="“"+pairs[si].en+"”";liveSet("O que você falar aparece aqui…","empty");sF.textContent="";sF.className="prx-fb";sH.textContent="Toque para falar";sM.classList.remove("rec");}
+  function sShow(){if(numMode){sT.innerHTML=numHTML(pairs[si]);}else{sT.textContent="“"+pairs[si].en+"”";}liveSet("O que você falar aparece aqui…","empty");sF.textContent="";sF.className="prx-fb";sH.textContent="Toque para falar";sM.classList.remove("rec");}
   sN.onclick=function(){si=(si+1)%pairs.length;sShow();}; sShow();
   function sCheck(said,score){said=(said||"").trim();if(!said){sF.textContent="🔇 Não ouvi nada. Toque e fale a frase.";sF.className="prx-fb no";liveSet("O que você falar aparece aqui…","empty");return;}liveSet(said);var ex=(score!=null&&!isNaN(score))?(" · pronúncia "+score+"/100"):"";var ok=norm(said)===norm(pairs[si].en)||(score!=null&&score>=80);if(ok){sF.textContent="✅ Isso! Você falou certinho."+ex;sF.className="prx-fb ok";sfx("ok");hap([0,30,40,60]);}else{sF.textContent="🔁 Ficou perto! Toque e tente de novo."+ex;sF.className="prx-fb no";sfx("no");hap(20);}}
   function rep(sec){try{fetch("/api/usage",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({seconds:sec})});}catch(e){}}
