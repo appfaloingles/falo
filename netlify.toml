@@ -1,6 +1,12 @@
 [build]
   publish = "."
 
+# Funcoes serverless (Azure Speech: token + medidor de uso). A chave do Azure
+# fica so no servidor (variavel de ambiente AZURE_SPEECH_KEY), nunca no app.
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
 # Nunca deixar o navegador guardar o service worker nem a home antigos —
 # assim toda atualização chega na hora e o app nunca abre uma versão velha.
 [[headers]]
