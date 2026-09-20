@@ -444,6 +444,10 @@ try{var mo=new MutationObserver(function(m){for(var i=0;i<m.length;i++){var x=m[
 }catch(e){}})();</script>
 <script>/*falo-practice*/(function(){if(window.__faloPrx)return;window.__faloPrx=1;try{
 document.head.insertAdjacentHTML("beforeend","<style>"+
+".card.game.prxwrap{background:var(--card)!important;color:var(--ink)!important;border:1px solid var(--line)!important;box-shadow:none!important;background-image:none!important}"+
+".card.game.prxwrap .lead{color:var(--ink-soft,#8a7a75)!important}"+
+".card.game.prxwrap h2{color:var(--ink)!important}"+
+".card.game.prxwrap .kicker .n{background:var(--coral,#FF5630)!important;color:#fff!important}"+
 ".prx{background:var(--card-2);border:1px solid var(--line);border-radius:16px;padding:16px;margin-top:14px}"+
 ".prx-h{font-weight:800;font-size:15.5px;color:var(--ink)}"+
 ".prx-sub{font-size:12.5px;color:var(--ink-soft,#8a7a75);font-weight:600;margin-top:6px}"+
@@ -476,12 +480,12 @@ function init(){
     return {en:en.textContent.trim(), pt:ptxt.trim()};
   }).filter(function(p){return p&&p.en&&p.pt&&/[a-zA-Z]/.test(p.en);});
   if(pairs.length<1) return;
-  var kicker=game.querySelector(".kicker"); game.innerHTML=""; if(kicker) game.appendChild(kicker);
+  var kicker=game.querySelector(".kicker"); game.innerHTML=""; game.classList.add("prxwrap"); if(kicker) game.appendChild(kicker);
   game.insertAdjacentHTML("beforeend",'<h2>Pratique escrita e fala 🎯</h2><p class="lead">Escreva em inglês e depois fale a frase — do jeito que se usa de verdade.</p>'+
   '<div class="prx prx-write"><div class="prx-h">✍️ Treino de escrita</div><div class="prx-sub">Escreva em inglês:</div><div class="prx-target" id="wT"></div><div class="prx-row"><input class="prx-in" id="wI" placeholder="Digite em inglês…" autocomplete="off" autocapitalize="off" autocorrect="off"><button class="prx-check" id="wC">Ver</button></div><div class="prx-fb" id="wF"></div><button class="prx-next" id="wN">🔀 Outra frase</button></div>'+
   '<div class="prx prx-speak"><div class="prx-h">🎤 Treino de fala</div><div class="prx-sub">Toque no microfone e fale a frase:</div><div class="prx-target" id="sT"></div><div class="prx-micwrap"><button class="prx-mic" id="sM" type="button">🎤</button><span class="prx-mich" id="sH">Toque para falar</span></div><div class="prx-live empty" id="sLive">O que você falar aparece aqui…</div><div class="prx-fb" id="sF"></div><button class="prx-next" id="sN">🔀 Outra frase</button></div>');
   // move a pratica pro fim da aula (depois do Smart Review, antes do "Concluir aula")
-  try{var _cta=document.getElementById("cta")||document.querySelector(".cta");if(_cta&&_cta.parentNode){_cta.parentNode.insertBefore(game,_cta);}}catch(e){}
+  try{var _cta=document.getElementById("cta")||document.querySelector(".cta");if(_cta){var _wrap=(_cta.closest&&_cta.closest(".nav"));if(_wrap&&_wrap.parentNode){_wrap.parentNode.insertBefore(game,_wrap);}else if(_cta.parentNode){_cta.parentNode.insertBefore(game,_cta);}}}catch(e){}
   function norm(s){return (s||"").toLowerCase().replace(/[^a-z0-9\s]/g,"").replace(/\s+/g," ").trim();}
   function hap(p){try{if(navigator.vibrate)navigator.vibrate(p);}catch(e){}}
   var _ac=null;function _ctx(){try{_ac=_ac||new(window.AudioContext||window.webkitAudioContext)();if(_ac.state==="suspended")_ac.resume();}catch(e){_ac=null;}return _ac;}
