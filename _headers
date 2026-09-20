@@ -1,0 +1,10 @@
+# Cloudflare Pages · nunca guardar em cache o service worker nem a home antigos,
+# pra toda atualizacao chegar na hora e o app nunca abrir uma versao velha.
+/sw.js
+  Cache-Control: no-cache
+/index.html
+  Cache-Control: no-cache
+/
+  Cache-Control: no-cache
+/manifest.webmanifest
+  Cache-Control: no-cache

@@ -508,7 +508,7 @@ function init(){
   function sShow(){sT.textContent="“"+pairs[si].en+"”";liveSet("O que você falar aparece aqui…","empty");sF.textContent="";sF.className="prx-fb";sH.textContent="Toque para falar";sM.classList.remove("rec");}
   sN.onclick=function(){si=(si+1)%pairs.length;sShow();}; sShow();
   function sCheck(said,score){said=(said||"").trim();if(!said){sF.textContent="🔇 Não ouvi nada. Toque e fale a frase.";sF.className="prx-fb no";liveSet("O que você falar aparece aqui…","empty");return;}liveSet(said);var ex=(score!=null&&!isNaN(score))?(" · pronúncia "+score+"/100"):"";var ok=norm(said)===norm(pairs[si].en)||(score!=null&&score>=80);if(ok){sF.textContent="✅ Isso! Você falou certinho."+ex;sF.className="prx-fb ok";sfx("ok");hap([0,30,40,60]);}else{sF.textContent="🔁 Ficou perto! Toque e tente de novo."+ex;sF.className="prx-fb no";sfx("no");hap(20);}}
-  function rep(sec){try{fetch("/.netlify/functions/usage",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({seconds:sec})});}catch(e){}}
+  function rep(sec){try{fetch("/api/usage",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({seconds:sec})});}catch(e){}}
   var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
   var isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent||"")||(/Macintosh/.test(navigator.userAgent||"")&&"ontouchend"in document);
   // iPhone/iOS nao tem Web Speech -> usa AZURE (chave protegida no servidor) c/ nota de pronuncia.
@@ -538,7 +538,7 @@ function init(){
     function recognize(){
       sH.textContent="Preparando…"; sF.textContent=""; sF.className="prx-fb";
       loadSDK(function(){
-        fetch("/.netlify/functions/token").then(function(r){return r.json();}).then(function(d){
+        fetch("/api/token").then(function(r){return r.json();}).then(function(d){
           if(!d||!d.token){ sF.textContent="Servico de voz indisponivel agora. Use a escrita acima ou tente mais tarde."; sF.className="prx-fb no"; sH.textContent="Toque para falar"; return; }
           var S=window.SpeechSDK;
           var sc=S.SpeechConfig.fromAuthorizationToken(d.token,d.region); sc.speechRecognitionLanguage="en-US";

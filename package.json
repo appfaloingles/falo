@@ -1,9 +1,0 @@
-{
-  "name": "falo",
-  "version": "1.0.0",
-  "private": true,
-  "description": "Falo · funcoes serverless (Azure Speech token + medidor de uso)",
-  "dependencies": {
-    "@netlify/blobs": "^8.1.0"
-  }
-}
