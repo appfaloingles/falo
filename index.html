@@ -933,7 +933,7 @@ function startOnboard(){
   const logo='<div class="ob-logo"><span class="d">💬</span>Falo</div>';
   function prog(n,tot){ let s='<div class="ob-prog">'; for(let i=0;i<tot;i++) s+='<i class="'+(i<n?'on':'')+'"></i>'; return s+'</div>'; }
   function welcome(){
-    box.innerHTML=logo+'<div class="ob-big">👋</div><h2>Bem-vindo ao Falo!</h2><p class="sub">Você vai aprender inglês de verdade — do jeito que se fala no dia a dia, com áudio nativo e prática de conversa. Vamos montar sua trilha em 30 segundos.</p><button class="ob-cta" id="obGo">Começar</button>';
+    box.innerHTML=logo+'<div style="text-align:center;margin:0 0 2px"><svg viewBox="0 0 150 170" style="width:130px;height:auto" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="fhWel" cx="50%" cy="40%" r="70%"><stop offset="0%" stop-color="#FFF3EC"/><stop offset="100%" stop-color="#FFE0CE"/></radialGradient></defs><ellipse cx="75" cy="162" rx="34" ry="7" fill="rgba(0,0,0,.12)"/><path d="M75 120 q-10 34 -2 44 q8 -6 10 -20 q6 16 14 20 q6 -14 -4 -44 z" fill="#0FB39B"/><path d="M40 62 q-26 6 -26 34 q0 22 22 30 q10 -30 12 -60 z" fill="#0FB39B"/><ellipse cx="75" cy="98" rx="42" ry="50" fill="#FF5630"/><ellipse cx="75" cy="106" rx="27" ry="36" fill="url(#fhWel)"/><path d="M110 62 q26 6 26 34 q0 22 -22 30 q-10 -30 -12 -60 z" fill="#E0431F"/><circle cx="75" cy="52" r="38" fill="#FF5630"/><path d="M62 20 q-4 -18 6 -18 q4 8 2 18 z" fill="#F5B23E"/><path d="M75 16 q-2 -16 4 -16 q4 8 0 18 z" fill="#0FB39B"/><path d="M86 20 q6 -16 -2 -18 q-6 8 -2 20 z" fill="#5B63E0"/><ellipse cx="63" cy="52" rx="15" ry="17" fill="#FFF3EC"/><ellipse cx="87" cy="52" rx="15" ry="17" fill="#FFF3EC"/><circle cx="64" cy="52" r="8.5" fill="#fff"/><circle cx="86" cy="52" r="8.5" fill="#fff"/><circle cx="65" cy="53" r="5" fill="#1C2140"/><circle cx="85" cy="53" r="5" fill="#1C2140"/><circle cx="67" cy="51" r="1.7" fill="#fff"/><circle cx="87" cy="51" r="1.7" fill="#fff"/><path d="M75 60 q-13 2 -13 12 q0 9 13 10 q13 -1 13 -10 q0 -10 -13 -12 z" fill="#F5B23E"/><path d="M75 82 q-10 0 -11 -8 q11 4 22 0 q-1 8 -11 8 z" fill="#E09A2A"/><circle cx="55" cy="64" r="5" fill="#FF7B4D" opacity=".55"/><circle cx="95" cy="64" r="5" fill="#FF7B4D" opacity=".55"/></svg></div><h2>Oi! Eu sou o Falo 🦜</h2><p class="sub">Seu papagaio professor! Vou te ensinar inglês <b>de verdade</b> — do jeito que se fala no dia a dia, com áudio nativo e prática de conversa. Vamos montar sua trilha em 30 segundos.</p><button class="ob-cta" id="obGo">Começar</button>';
     box.querySelector("#obGo").onclick=askName;
   }
   function askName(){
@@ -1113,3 +1113,55 @@ if("serviceWorker" in navigator){
 </script>
 </body>
 </html>
+<script>/*falo-home-mascote*/(function(){if(window.__faloHomeMasc)return;window.__faloHomeMasc=1;try{
+var C="#FF5630",T="#0FB39B",G="#F5B23E",I="#5B63E0",K="#1C2140";
+window.FALO_SVG='<svg viewBox="0 0 150 170" xmlns="http://www.w3.org/2000/svg" aria-label="Falo, o papagaio">'
++'<defs><radialGradient id="fhB" cx="50%" cy="40%" r="70%"><stop offset="0%" stop-color="#FFF3EC"/><stop offset="100%" stop-color="#FFE0CE"/></radialGradient></defs>'
++'<ellipse cx="75" cy="162" rx="34" ry="7" fill="rgba(0,0,0,.12)"/>'
++'<path d="M75 120 q-10 34 -2 44 q8 -6 10 -20 q6 16 14 20 q6 -14 -4 -44 z" fill="'+T+'"/>'
++'<g class="fhwl"><path d="M40 62 q-26 6 -26 34 q0 22 22 30 q10 -30 12 -60 z" fill="'+T+'"/><path d="M22 74 q-6 20 4 40 M31 70 q-4 24 6 44" stroke="#0c8f7d" stroke-width="3" fill="none" stroke-linecap="round"/></g>'
++'<ellipse cx="75" cy="98" rx="42" ry="50" fill="'+C+'"/>'
++'<ellipse cx="75" cy="106" rx="27" ry="36" fill="url(#fhB)"/>'
++'<path d="M110 62 q26 6 26 34 q0 22 -22 30 q-10 -30 -12 -60 z" fill="#E0431F"/>'
++'<path d="M124 74 q6 20 -4 40 M115 70 q4 24 -6 44" stroke="#c23a1a" stroke-width="3" fill="none" stroke-linecap="round"/>'
++'<circle cx="75" cy="52" r="38" fill="'+C+'"/>'
++'<path d="M62 20 q-4 -18 6 -18 q4 8 2 18 z" fill="'+G+'"/>'
++'<path d="M75 16 q-2 -16 4 -16 q4 8 0 18 z" fill="'+T+'"/>'
++'<path d="M86 20 q6 -16 -2 -18 q-6 8 -2 20 z" fill="'+I+'"/>'
++'<ellipse cx="63" cy="52" rx="15" ry="17" fill="#FFF3EC"/><ellipse cx="87" cy="52" rx="15" ry="17" fill="#FFF3EC"/>'
++'<circle cx="64" cy="52" r="8.5" fill="#fff"/><circle cx="86" cy="52" r="8.5" fill="#fff"/>'
++'<circle cx="65" cy="53" r="5" fill="'+K+'"/><circle cx="85" cy="53" r="5" fill="'+K+'"/>'
++'<circle cx="67" cy="51" r="1.7" fill="#fff"/><circle cx="87" cy="51" r="1.7" fill="#fff"/>'
++'<path d="M75 60 q-13 2 -13 12 q0 9 13 10 q13 -1 13 -10 q0 -10 -13 -12 z" fill="'+G+'"/>'
++'<path d="M75 82 q-10 0 -11 -8 q11 4 22 0 q-1 8 -11 8 z" fill="#E09A2A"/>'
++'<circle cx="55" cy="64" r="5" fill="#FF7B4D" opacity=".55"/><circle cx="95" cy="64" r="5" fill="#FF7B4D" opacity=".55"/>'
++'<path d="M66 146 l-4 10 M66 146 l0 11 M66 146 l4 10" stroke="'+G+'" stroke-width="3.5" stroke-linecap="round" fill="none"/>'
++'<path d="M84 146 l-4 10 M84 146 l0 11 M84 146 l4 10" stroke="'+G+'" stroke-width="3.5" stroke-linecap="round" fill="none"/>'
++'</svg>';
+document.head.insertAdjacentHTML("beforeend","<style>"+
+"body{-webkit-user-select:none;-moz-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}"+
+"input,textarea,select,[contenteditable],.prx-in,.ob-input{-webkit-user-select:text;-moz-user-select:text;user-select:text;-webkit-touch-callout:default}"+
+"#fhMasc{position:fixed;right:12px;bottom:78px;z-index:9996;display:flex;flex-direction:column;align-items:center;gap:6px;pointer-events:none;transform:translateY(180%);transition:transform .55s cubic-bezier(.2,.9,.3,1.2)}"+
+"#fhMasc.show{transform:translateY(0)}"+
+"#fhMasc .mb{background:"+K+";color:#fff;font-family:'Bricolage Grotesque','Baloo 2',system-ui,sans-serif;font-weight:800;font-size:14px;padding:9px 13px;border-radius:14px;max-width:210px;text-align:center;line-height:1.2;box-shadow:0 8px 20px -10px rgba(0,0,0,.5);opacity:0;transform:translateY(6px) scale(.9);transition:opacity .3s,transform .3s}"+
+"#fhMasc .mb.on{opacity:1;transform:none}"+
+"#fhMasc .mb:after{content:'';position:absolute;bottom:-7px;left:50%;margin-left:-7px;border:7px solid transparent;border-top-color:"+K+";border-bottom:0}"+
+"#fhMasc svg{width:78px;height:90px;filter:drop-shadow(0 8px 12px rgba(0,0,0,.22));transform-origin:50% 90%;animation:fhbob 2.6s ease-in-out infinite}"+
+"#fhMasc .fhwl{transform-origin:70% 40%;animation:fhwave 2.6s ease-in-out infinite}"+
+"@keyframes fhbob{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-5px) rotate(-1.5deg)}}"+
+"@keyframes fhwave{0%,100%{transform:rotate(0)}50%{transform:rotate(-16deg)}}"+
+"</style>");
+function nm(){try{var r=JSON.parse(localStorage.getItem("fluent_home_v1")||"{}");return r.name?(", "+String(r.name).split(" ")[0]):"";}catch(e){return "";}}
+function boot(){
+  // so cumprimenta quem ja passou do onboarding (senao o onboarding ja mostra o Falo)
+  try{ if(document.querySelector(".ob-ov")) return; }catch(e){}
+  var w=document.createElement("div"); w.id="fhMasc";
+  w.innerHTML='<div class="mb" id="fhBub"></div>'+window.FALO_SVG;
+  document.body.appendChild(w);
+  var HI=["Bom te ver de novo"+nm()+"! 🦜","Bora praticar hoje"+nm()+"? 💪","Que bom que voltou"+nm()+"! ✨","Pronto pra evoluir"+nm()+"?"];
+  w.querySelector("#fhBub").textContent=HI[Math.floor(Math.random()*HI.length)];
+  w.classList.add("show"); setTimeout(function(){w.querySelector("#fhBub").classList.add("on");},280);
+  setTimeout(function(){w.classList.remove("show");w.querySelector("#fhBub").classList.remove("on");},5200);
+}
+setTimeout(boot,900);
+}catch(e){}})();</script>

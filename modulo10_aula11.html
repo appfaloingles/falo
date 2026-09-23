@@ -554,24 +554,37 @@ function init(){
   // move a pratica pro fim da aula (depois do Smart Review, antes do "Concluir aula")
   try{var _cta=document.getElementById("cta")||document.querySelector(".cta");if(_cta){var _wrap=(_cta.closest&&_cta.closest(".nav"));if(_wrap&&_wrap.parentNode){_wrap.parentNode.insertBefore(game,_wrap);}else if(_cta.parentNode){_cta.parentNode.insertBefore(game,_cta);}}}catch(e){}
   function norm(s){return (s||"").toLowerCase().replace(/[-‐-―_]/g," ").replace(/[^a-z0-9\s]/g,"").replace(/\s+/g," ").trim();}
-  function speechOk(said,target,score){var a=norm(said),b=norm(target);if(!a||!b)return false;if(a===b)return true;if(score!=null&&score>=70)return true;if(a.indexOf(b)>=0||b.indexOf(a)>=0)return true;var bw=b.split(" "),aw=a.split(" "),hit=0;for(var i=0;i<bw.length;i++){if(aw.indexOf(bw[i])>=0)hit++;}return bw.length>0&&(hit/bw.length)>=0.75;}
+  function textMatch(said,target){var a=norm(said),b=norm(target);if(!a||!b)return false;if(a===b)return true;var aw=a.split(" "),bw=b.split(" "),hit=0;for(var i=0;i<bw.length;i++){if(aw.indexOf(bw[i])>=0)hit++;}return (hit/bw.length)>=0.8 && aw.length>=Math.max(1,bw.length-1);}
   function numHTML(p){return '<span class="prx-num">'+p.pt+'</span><span class="prx-tag '+(p.ord?"ord":"card")+'">'+(p.ord?"ordinal":"cardinal")+'</span>';}
   function hap(p){try{if(navigator.vibrate)navigator.vibrate(p);}catch(e){}}
   var _ac=null;function _ctx(){try{_ac=_ac||new(window.AudioContext||window.webkitAudioContext)();if(_ac.state==="suspended")_ac.resume();}catch(e){_ac=null;}return _ac;}
   function tone(f,d,t,w,gg){var a=_ctx();if(!a)return;var o=a.createOscillator(),n=a.createGain();o.type=t||"sine";o.frequency.value=f;o.connect(n);n.connect(a.destination);var s=a.currentTime+(w||0);n.gain.setValueAtTime(gg||0.06,s);n.gain.exponentialRampToValueAtTime(0.0001,s+d);o.start(s);o.stop(s+d);}
   function sfx(k){try{if(k==="ok"){tone(660,.12,"triangle",0,.06);tone(990,.15,"triangle",.1,.06);}else{tone(340,.15,"sine",0,.05);tone(220,.2,"sine",.1,.05);}}catch(e){}}
+  function masc(ok){try{if(window.faloMasc&&window.faloMasc.react)window.faloMasc.react(ok);}catch(e){}}
   var g=game;
   // ESCRITA
   var wi=0,wT=g.querySelector("#wT"),wI=g.querySelector("#wI"),wC=g.querySelector("#wC"),wF=g.querySelector("#wF"),wN=g.querySelector("#wN");
   function wShow(){var p=pairs[wi];if(p.kind==="num"){wT.innerHTML=numHTML(p);}else{wT.textContent="“"+p.pt+"”";}wI.value="";wF.textContent="";wF.className="prx-fb";}
-  function wDo(){var v=wI.value.trim();if(!v)return;if(norm(v)===norm(pairs[wi].en)){wF.textContent="✅ Perfeito! “"+pairs[wi].en+"”";wF.className="prx-fb ok";sfx("ok");hap([0,30,40,60]);}else{wF.textContent="❌ Quase! O certo é: “"+pairs[wi].en+"”";wF.className="prx-fb no";sfx("no");hap(20);}}
+  function wDo(){var v=wI.value.trim();if(!v)return;if(norm(v)===norm(pairs[wi].en)){wF.textContent="✅ Perfeito! “"+pairs[wi].en+"”";wF.className="prx-fb ok";sfx("ok");hap([0,30,40,60]);masc(true);}else{wF.textContent="❌ Quase! O certo é: “"+pairs[wi].en+"”";wF.className="prx-fb no";sfx("no");hap(20);masc(false);}}
   wC.onclick=wDo; wI.onkeydown=function(e){if(e.key==="Enter")wDo();}; wN.onclick=function(){wi=(wi+1)%pairs.length;wShow();}; wShow();
   // FALA (toque pra falar, para sozinho no silencio; permissao via pop-up in-app)
   var si=0,sT=g.querySelector("#sT"),sM=g.querySelector("#sM"),sH=g.querySelector("#sH"),sLive=g.querySelector("#sLive"),sF=g.querySelector("#sF"),sN=g.querySelector("#sN");
   function liveSet(txt,cls){sLive.textContent=txt;sLive.className="prx-live"+(cls?(" "+cls):"");}
   function sShow(){var p=pairs[si];if(p.kind==="num"){sT.innerHTML=numHTML(p);}else{sT.textContent="“"+p.en+"”";}liveSet("O que você falar aparece aqui…","empty");sF.textContent="";sF.className="prx-fb";sH.textContent="Toque para falar";sM.classList.remove("rec");}
   sN.onclick=function(){si=(si+1)%pairs.length;sShow();}; sShow();
-  function sCheck(said,score){said=(said||"").trim();if(!said){sF.textContent="🔇 Não ouvi nada. Toque e fale a frase.";sF.className="prx-fb no";liveSet("O que você falar aparece aqui…","empty");return;}liveSet(said);var ex=(score!=null&&!isNaN(score))?(" · pronúncia "+score+"/100"):"";var ok=speechOk(said,pairs[si].en,score);if(ok){sF.textContent="✅ Isso! Você falou certinho."+ex;sF.className="prx-fb ok";sfx("ok");hap([0,30,40,60]);}else{sF.textContent="🔁 Ficou perto! Toque e tente de novo."+ex;sF.className="prx-fb no";sfx("no");hap(20);}}
+  function sCheck(said,score,isAzure){said=(said||"").trim();
+    if(isAzure){ // iPhone: a NOTA de pronuncia eh o sinal real (o texto pode ecoar a frase-alvo)
+      if(score==null||isNaN(score)){sF.textContent="🔇 Não peguei sua voz. Toque e fale perto do microfone.";sF.className="prx-fb no";liveSet("O que você falar aparece aqui…","empty");return;}
+      liveSet(said||"…");
+      if(score>=55){sF.textContent="✅ Boa! Pronúncia "+score+"/100.";sF.className="prx-fb ok";sfx("ok");hap([0,30,40,60]);masc(true);}
+      else{sF.textContent="🔁 Quase — pronúncia "+score+"/100. Fale de novo, mais claro.";sF.className="prx-fb no";sfx("no");hap(20);masc(false);}
+      return;
+    }
+    if(!said){sF.textContent="🔇 Não ouvi nada. Toque e fale a frase.";sF.className="prx-fb no";liveSet("O que você falar aparece aqui…","empty");return;}
+    liveSet(said);
+    if(textMatch(said,pairs[si].en)){sF.textContent="✅ Isso! Você falou certinho.";sF.className="prx-fb ok";sfx("ok");hap([0,30,40,60]);masc(true);}
+    else{sF.textContent="🔁 Ficou perto! Toque e tente de novo.";sF.className="prx-fb no";sfx("no");hap(20);masc(false);}
+  }
   function rep(sec){try{fetch("/api/usage",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({seconds:sec})});}catch(e){}}
   var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
   var isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent||"")||(/Macintosh/.test(navigator.userAgent||"")&&"ontouchend"in document);
@@ -606,6 +619,7 @@ function init(){
           if(!d||!d.token){ sF.textContent="Servico de voz indisponivel agora. Use a escrita acima ou tente mais tarde."; sF.className="prx-fb no"; sH.textContent="Toque para falar"; return; }
           var S=window.SpeechSDK;
           var sc=S.SpeechConfig.fromAuthorizationToken(d.token,d.region); sc.speechRecognitionLanguage="en-US";
+          try{ sc.setProperty(S.PropertyId.SpeechServiceConnection_InitialSilenceTimeoutMs,"7000"); sc.setProperty(S.PropertyId.SpeechServiceConnection_EndSilenceTimeoutMs,"1300"); }catch(e){}
           var ac=S.AudioConfig.fromDefaultMicrophoneInput();
           var reco=new S.SpeechRecognizer(sc,ac);
           try{ var pa=new S.PronunciationAssessmentConfig(pairs[si].en, S.PronunciationAssessmentGradingSystem.HundredMark, S.PronunciationAssessmentGranularity.Phoneme, false); pa.applyTo(reco); }catch(e){}
@@ -617,7 +631,7 @@ function init(){
             azListening=false; sM.classList.remove("rec"); sH.textContent="Toque para falar";
             var said=(res&&res.text)?res.text:lastLive; var score=null;
             try{ var pr=S.PronunciationAssessmentResult.fromResult(res); if(pr&&pr.pronunciationScore!=null) score=Math.round(pr.pronunciationScore); }catch(e){}
-            sCheck(said,score);
+            sCheck(said,score,true);
             try{reco.close();}catch(e){}
           }, function(err){
             azListening=false; sM.classList.remove("rec"); sH.textContent="Toque para falar";
@@ -632,4 +646,66 @@ function init(){
 }
 // roda DEPOIS do load completo + atraso, pra pegar numeros/ordinais que a aula gera tarde
 if(document.readyState==="complete"){setTimeout(init,600);}else{window.addEventListener("load",function(){setTimeout(init,600);});}
+}catch(e){}})();</script>
+<script>/*falo-mascote*/(function(){if(window.__faloMasc)return;window.__faloMasc=1;try{
+var C="#FF5630",T="#0FB39B",G="#F5B23E",I="#5B63E0",K="#1C2140";
+document.head.insertAdjacentHTML("beforeend","<style>"+
+"body{-webkit-user-select:none;-moz-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}"+
+"input,textarea,select,[contenteditable],.prx-in{-webkit-user-select:text;-moz-user-select:text;user-select:text;-webkit-touch-callout:default}"+
+"#faloMasc{position:fixed;right:12px;bottom:14px;z-index:9997;display:flex;flex-direction:column;align-items:center;gap:6px;pointer-events:none;transform:translateY(150%);transition:transform .5s cubic-bezier(.2,.9,.3,1.2)}"+
+"#faloMasc.show{transform:translateY(0)}"+
+"#faloMasc .mb{background:"+K+";color:#fff;font-family:'Baloo 2','Bricolage Grotesque',system-ui,sans-serif;font-weight:800;font-size:14px;padding:9px 13px;border-radius:14px;max-width:200px;text-align:center;box-shadow:0 8px 20px -10px rgba(0,0,0,.5);position:relative;line-height:1.2;opacity:0;transform:translateY(6px) scale(.9);transition:opacity .3s,transform .3s}"+
+"#faloMasc .mb.on{opacity:1;transform:translateY(0) scale(1)}"+
+"#faloMasc .mb:after{content:'';position:absolute;bottom:-7px;left:50%;margin-left:-7px;border:7px solid transparent;border-top-color:"+K+";border-bottom:0}"+
+"#faloMasc svg{width:82px;height:94px;filter:drop-shadow(0 8px 12px rgba(0,0,0,.22));transform-origin:50% 90%;animation:fmbob 2.6s ease-in-out infinite}"+
+"#faloMasc.cheer svg{animation:fmcheer .7s ease}"+
+"#faloMasc .wl{transform-origin:70% 40%;animation:fmwave 2.6s ease-in-out infinite}"+
+"@keyframes fmbob{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-5px) rotate(-1.5deg)}}"+
+"@keyframes fmcheer{0%{transform:translateY(0) scale(1)}30%{transform:translateY(-18px) scale(1.08) rotate(6deg)}55%{transform:translateY(0) rotate(-4deg)}75%{transform:translateY(-7px) rotate(2deg)}100%{transform:translateY(0)}}"+
+"@keyframes fmwave{0%,100%{transform:rotate(0)}50%{transform:rotate(-16deg)}}"+
+"</style>");
+var svg='<svg viewBox="0 0 150 170" xmlns="http://www.w3.org/2000/svg" aria-label="Falo, o papagaio">'
++'<defs><radialGradient id="fmB" cx="50%" cy="40%" r="70%"><stop offset="0%" stop-color="#FFF3EC"/><stop offset="100%" stop-color="#FFE0CE"/></radialGradient></defs>'
++'<ellipse cx="75" cy="162" rx="34" ry="7" fill="rgba(0,0,0,.12)"/>'
++'<path d="M75 120 q-10 34 -2 44 q8 -6 10 -20 q6 16 14 20 q6 -14 -4 -44 z" fill="'+T+'"/>'
++'<g class="wl"><path d="M40 62 q-26 6 -26 34 q0 22 22 30 q10 -30 12 -60 z" fill="'+T+'"/><path d="M22 74 q-6 20 4 40 M31 70 q-4 24 6 44" stroke="#0c8f7d" stroke-width="3" fill="none" stroke-linecap="round"/></g>'
++'<ellipse cx="75" cy="98" rx="42" ry="50" fill="'+C+'"/>'
++'<ellipse cx="75" cy="106" rx="27" ry="36" fill="url(#fmB)"/>'
++'<path d="M110 62 q26 6 26 34 q0 22 -22 30 q-10 -30 -12 -60 z" fill="#E0431F"/>'
++'<path d="M124 74 q6 20 -4 40 M115 70 q4 24 -6 44" stroke="#c23a1a" stroke-width="3" fill="none" stroke-linecap="round"/>'
++'<circle cx="75" cy="52" r="38" fill="'+C+'"/>'
++'<path d="M62 20 q-4 -18 6 -18 q4 8 2 18 z" fill="'+G+'"/>'
++'<path d="M75 16 q-2 -16 4 -16 q4 8 0 18 z" fill="'+T+'"/>'
++'<path d="M86 20 q6 -16 -2 -18 q-6 8 -2 20 z" fill="'+I+'"/>'
++'<ellipse cx="63" cy="52" rx="15" ry="17" fill="#FFF3EC"/><ellipse cx="87" cy="52" rx="15" ry="17" fill="#FFF3EC"/>'
++'<circle cx="64" cy="52" r="8.5" fill="#fff"/><circle cx="86" cy="52" r="8.5" fill="#fff"/>'
++'<circle cx="65" cy="53" r="5" fill="'+K+'"/><circle cx="85" cy="53" r="5" fill="'+K+'"/>'
++'<circle cx="67" cy="51" r="1.7" fill="#fff"/><circle cx="87" cy="51" r="1.7" fill="#fff"/>'
++'<path d="M75 60 q-13 2 -13 12 q0 9 13 10 q13 -1 13 -10 q0 -10 -13 -12 z" fill="'+G+'"/>'
++'<path d="M75 82 q-10 0 -11 -8 q11 4 22 0 q-1 8 -11 8 z" fill="#E09A2A"/>'
++'<circle cx="55" cy="64" r="5" fill="#FF7B4D" opacity=".55"/><circle cx="95" cy="64" r="5" fill="#FF7B4D" opacity=".55"/>'
++'<path d="M66 146 l-4 10 M66 146 l0 11 M66 146 l4 10" stroke="'+G+'" stroke-width="3.5" stroke-linecap="round" fill="none"/>'
++'<path d="M84 146 l-4 10 M84 146 l0 11 M84 146 l4 10" stroke="'+G+'" stroke-width="3.5" stroke-linecap="round" fill="none"/>'
++'</svg>';
+var wrap=document.createElement("div"); wrap.id="faloMasc";
+wrap.innerHTML='<div class="mb" id="fmBub"></div>'+svg;
+document.body.appendChild(wrap);
+var bub=wrap.querySelector("#fmBub");
+var STARTS=["Vamos nessa! 🚀","Bora aprender! 💪","Tô com você!","Partiu inglês! ✨","Você consegue!"];
+var ENDS=["Mandou muito bem! 🎉","Orgulho de você! 🌟","Arrasou!","Mais um dia fluente! 🔥","Tá voando no inglês! 🦜"];
+var _t1,_t2;
+function pick(a){return a[Math.floor(Math.random()*a.length)];}
+function hide(){wrap.classList.remove("show");bub.classList.remove("on");}
+function greet(){bub.textContent=pick(STARTS);wrap.classList.add("show");clearTimeout(_t1);_t1=setTimeout(function(){bub.classList.add("on");},260);clearTimeout(_t2);_t2=setTimeout(hide,4200);}
+var cheered=false;
+function cheer(){if(cheered)return;cheered=true;bub.textContent=pick(ENDS);wrap.classList.add("show","cheer");clearTimeout(_t1);_t1=setTimeout(function(){bub.classList.add("on");},260);setTimeout(function(){wrap.classList.remove("cheer");},760);clearTimeout(_t2);_t2=setTimeout(hide,5200);}
+var GOODS=["Isso! 🎉","Muito bem! 🌟","Acertou! 🔥","Boa! 👏","Mandou bem!"];
+var TRIES=["Quase! Tenta de novo 💪","Vai que vai! 🦜","Não desiste! 😊","Chega perto!","Foco, você consegue!"];
+function react(ok,msg){bub.textContent=msg||(ok?pick(GOODS):pick(TRIES));wrap.classList.add("show");clearTimeout(_t1);_t1=setTimeout(function(){bub.classList.add("on");},200);if(ok){wrap.classList.add("cheer");setTimeout(function(){wrap.classList.remove("cheer");},760);}clearTimeout(_t2);_t2=setTimeout(hide,2600);}
+window.faloMasc={greet:greet,cheer:cheer,react:react};
+// inicio da aula
+setTimeout(greet,900);
+// fim da aula: observa "concluida"/"Baralho zerado"
+function scan(s){if(!s||s.length>200)return;if(/conclu[ií]da/i.test(s)||/Baralho zerado/i.test(s))cheer();}
+try{var mo=new MutationObserver(function(m){for(var i=0;i<m.length;i++){var x=m[i];if(x.type==="characterData")scan(x.target&&x.target.data);else if(x.target)scan(x.target.textContent);}});mo.observe(document.body,{childList:true,subtree:true,characterData:true});}catch(e){}
 }catch(e){}})();</script>
